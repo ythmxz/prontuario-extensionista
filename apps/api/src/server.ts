@@ -1,20 +1,17 @@
 import Fastify from "fastify";
+import { usersRoutes } from "./routes/users";
 
 const app = Fastify();
 
-app.get("/", async () => {
-  return {
-    message: "Hello, World!",
-  };
-});
+app.register(usersRoutes);
 
 const start = async () => {
   try {
-    const address = await app.listen({
+    await app.listen({
       port: 3333,
     });
 
-    console.log(`Rodando em ${address}`);
+    console.log("Hello, World!");
   } catch (err) {
     app.log.error(err);
     process.exit(1);
