@@ -2,8 +2,18 @@ import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma";
 
 export async function usersRoutes(app: FastifyInstance) {
-  app.get("/users", async () => {
-    const users = await prisma.user.findMany();
+  app.get("/users", async (request) => {
+    const { name, email } = request.query as {
+      name?: string;
+      email?: string;
+    };
+
+    const users = await prisma.user.findMany({
+      where: {
+        name: name ? { contains: name, mode: "insensitive" } : undefined,
+        email: email ? { contains: email, mode: "insensitive" } : undefined,
+      },
+    });
 
     return users;
   });
