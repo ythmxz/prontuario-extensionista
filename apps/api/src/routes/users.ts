@@ -1,5 +1,15 @@
 import { FastifyInstance } from "fastify";
+import bcrypt from "bcryptjs";
+import { Prisma } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
+
+const userSelect = {
+  id: true,
+  name: true,
+  email: true,
+  cpf: true,
+  phone: true,
+};
 
 export async function usersRoutes(app: FastifyInstance) {
   app.get("/users", async (request) => {
@@ -13,6 +23,7 @@ export async function usersRoutes(app: FastifyInstance) {
         name: name ? { contains: name, mode: "insensitive" } : undefined,
         email: email ? { contains: email, mode: "insensitive" } : undefined,
       },
+      select: userSelect,
     });
 
     return users;
@@ -22,16 +33,44 @@ export async function usersRoutes(app: FastifyInstance) {
     const body = request.body as {
       name: string;
       email: string;
+      cpf: string;
+      phone: string;
+      password: string;
     };
 
-    const user = await prisma.user.create({
-      data: {
-        name: body.name,
-        email: body.email,
-      },
-    });
+    const name = body.name?.trim();
+    const email = body.email?.trim();
+    const cpf = body.cpf?.trim();
+    const phone = body.phone?.trim();
 
-    return reply.status(201).send(user);
+    if (!name || !email || !cpf || !phone || !body.password) {
+      return reply.status(400).send({ message: "Dados obrigatorios ausentes." });
+    }
+
+    const passwordHash = await bcrypt.hash(body.password, 10);
+
+    try {
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          cpf,
+          phone,
+          passwordHash,
+        },
+        select: userSelect,
+      });
+
+      return reply.status(201).send(user);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          return reply.status(409).send({ message: "Email ja cadastrado." });
+        }
+      }
+
+      throw error;
+    }
   });
 
   app.put("/users/:email", async (request, reply) => {
@@ -39,6 +78,8 @@ export async function usersRoutes(app: FastifyInstance) {
     const body = request.body as {
       name: string;
       email: string;
+      cpf: string;
+      phone: string;
     };
 
     const user = await prisma.user.update({
@@ -48,7 +89,10 @@ export async function usersRoutes(app: FastifyInstance) {
       data: {
         name: body.name,
         email: body.email,
+        cpf: body.cpf,
+        phone: body.phone,
       },
+      select: userSelect,
     });
 
     return reply.status(200).send(user);
@@ -59,6 +103,8 @@ export async function usersRoutes(app: FastifyInstance) {
     const body = request.body as {
       name?: string;
       email?: string;
+      cpf?: string;
+      phone?: string;
     };
 
     const user = await prisma.user.update({
@@ -68,7 +114,10 @@ export async function usersRoutes(app: FastifyInstance) {
       data: {
         name: body.name,
         email: body.email,
+        cpf: body.cpf,
+        phone: body.phone,
       },
+      select: userSelect,
     });
 
     return reply.status(200).send(user);
