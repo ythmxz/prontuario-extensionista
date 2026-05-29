@@ -662,3 +662,27 @@ footer {
     padding-right: 18px;
   }
 }
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* GARANTE CORES CORRETAS */
+html, body {
+  background: #f8fafc;
+  color: #111827;
+  font-family: Arial, sans-serif;
+}
+
+/* REMOVE POSSÍVEIS BUGS */
+body {
+  opacity: 1 !important;
+}
+
+/* NÃO DEIXA HERDAR TRANSPARÊNCIA */
+* {
+  opacity: 1;
+}
