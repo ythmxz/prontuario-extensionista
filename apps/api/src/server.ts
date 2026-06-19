@@ -2,6 +2,8 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { authRoutes } from "./routes/auth.ts";
 import { usersRoutes } from "./routes/users.ts";
+import { departmentsRoutes } from "./routes/departments.ts";
+import { colegiadosRoutes } from "./routes/colegiados.ts";
 
 const app = Fastify({ logger: false });
 
@@ -11,6 +13,8 @@ app.register(cors, {
 
 app.register(authRoutes);
 app.register(usersRoutes);
+app.register(departmentsRoutes);
+app.register(colegiadosRoutes);
 
 app.get("/health", async () => {
   return { status: "ok" };
