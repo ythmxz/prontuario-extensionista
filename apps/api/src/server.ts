@@ -18,7 +18,8 @@ app.get("/health", async () => {
 
 const start = async () => {
   try {
-    const address = await app.listen({ port: 3333, host: "0.0.0.0" });
+    const port = Number(process.env.PORT) || 3333;
+    const address = await app.listen({ port, host: "0.0.0.0" });
     console.log(address)
   } catch (err) {
     app.log.error(err);
