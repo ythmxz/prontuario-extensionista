@@ -22,3 +22,522 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+enum Sexo {
+  M
+  F
+  OUTRO
+}
+
+enum ModalidadeAcao {
+  PRESENCIAL
+  REMOTO
+  HIBRIDO
+}
+
+enum StatusAcao {
+  PLANEJADA
+  EM_ANDAMENTO
+  CONCLUIDA
+  CANCELADA
+}
+
+enum TipoLocal {
+  ESCOLA
+  UBS
+  CAMPUS
+  COMUNIDADE
+  OUTRO
+}
+
+enum TipoDocumento {
+  RELATORIO
+  MATERIAL_EDUCATIVO
+  FOTO
+  VIDEO
+  OUTRO
+}
+
+enum TipoMembro {
+  COORDENADOR
+  DOCENTE
+  DISCENTE
+  VOLUNTARIO
+  TECNICO
+}
+
+enum FrequenciaParticipacao {
+  PRESENTE
+  AUSENTE
+  JUSTIFICADO
+}
+
+enum TipoAtendimento {
+  CONSULTA
+  TRIAGEM
+  ORIENTACAO
+  ACOMPANHAMENTO
+  OUTRO
+}
+
+enum NivelCurso {
+  GRADUACAO
+  ESPECIALIZACAO
+  MESTRADO
+  DOUTORADO
+}
+
+enum SituacaoAluno {
+  ATIVO
+  TRANCADO
+  FORMADO
+  EVADIDO
+  JUBILADO
+}
+
+model Departamento {
+  id Int @id @default(autoincrement())
+
+  nome String @db.VarChar(150)
+
+  sigla String @db.VarChar(20)
+
+  colegiados Colegiado[]
+
+  nucleos Nucleo[]
+
+  membrosEquipe MembroEquipe[]
+
+  professores Professor[]
+
+  @@map("departamento")
+}
+
+model Colegiado {
+  id Int @id @default(autoincrement())
+
+  departamentoId Int
+
+  nome String @db.VarChar(150)
+
+  departamento Departamento @relation(fields: [departamentoId], references: [id])
+
+  cursos Curso[]
+
+  @@map("colegiado")
+}
+
+model Curso {
+  id Int @id @default(autoincrement())
+
+  colegiadoId Int
+
+  nome String @db.VarChar(150)
+
+  sigla String? @db.VarChar(20)
+
+  nivel NivelCurso
+
+  cargaHoraria Int?
+
+  duracaoPeriodos Int?
+
+  colegiado Colegiado @relation(fields: [colegiadoId], references: [id])
+
+  alunos Aluno[]
+
+  @@map("curso")
+}
+
+model Aluno {
+  id Int @id @default(autoincrement())
+
+  pessoaId Int @unique
+
+  cursoId Int
+
+  matricula String @unique @db.VarChar(30)
+
+  periodoAtual Int?
+
+  situacao SituacaoAluno @default(ATIVO)
+
+  dataIngresso DateTime @db.Date
+
+  pessoa Pessoa @relation(fields: [pessoaId], references: [id])
+
+  curso Curso @relation(fields: [cursoId], references: [id])
+
+  @@map("aluno")
+}
+
+model Professor {
+  id Int @id @default(autoincrement())
+
+  pessoaId Int @unique
+
+  departamentoId Int
+
+  matricula String @unique @db.VarChar(30)
+
+  vinculo String? @db.VarChar(80)
+
+  pessoa Pessoa @relation(fields: [pessoaId], references: [id])
+
+  departamento Departamento @relation(fields: [departamentoId], references: [id])
+
+  @@map("professor")
+}
+
+model Nucleo {
+  id Int @id @default(autoincrement())
+
+  departamentoId Int?
+
+  nome String @db.VarChar(200)
+
+  sigla String @db.VarChar(20)
+
+  objetivo String @db.Text
+
+  dataAprovacao DateTime @db.Date
+
+  resolucaoConsepe String @db.VarChar(50)
+
+  departamento Departamento? @relation(fields: [departamentoId], references: [id])
+
+  linhasAtuacao LinhaAtuacao[]
+
+  @@map("nucleo")
+}
+
+model LinhaAtuacao {
+  id Int @id @default(autoincrement())
+
+  nucleoId Int
+
+  nome String @db.VarChar(100)
+
+  descricao String @db.Text
+
+  publicoFoco String @db.VarChar(100)
+
+  nucleo Nucleo @relation(fields: [nucleoId], references: [id])
+
+  acoes AcaoExtensionista[]
+
+  @@map("linha_atuacao")
+}
+
+model TipoAcao {
+  id Int @id @default(autoincrement())
+
+  nome String @db.VarChar(80)
+
+  descricao String @db.Text
+
+  acoes AcaoExtensionista[]
+
+  @@map("tipo_acao")
+}
+
+model LocalAcao {
+  id Int @id @default(autoincrement())
+
+  nome String @db.VarChar(150)
+
+  tipo TipoLocal
+
+  endereco String @db.Text
+
+  municipio String @db.VarChar(100)
+
+  acoes AcaoExtensionista[]
+
+  @@map("local_acao")
+}
+
+model AcaoExtensionista {
+  id Int @id @default(autoincrement())
+
+  linhaAtuacaoId Int
+
+  tipoAcaoId Int
+
+  localId Int
+
+  titulo String @db.VarChar(200)
+
+  descricao String @db.Text
+
+  dataInicio DateTime @db.Date
+
+  dataFim DateTime? @db.Date
+
+  cargaHoraria Decimal @db.Decimal(5, 1)
+
+  modalidade ModalidadeAcao
+
+  publicoAlvo String @db.VarChar(200)
+
+  status StatusAcao @default(PLANEJADA)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  linhaAtuacao LinhaAtuacao @relation(fields: [linhaAtuacaoId], references: [id])
+
+  tipoAcao TipoAcao @relation(fields: [tipoAcaoId], references: [id])
+
+  local LocalAcao @relation(fields: [localId], references: [id])
+
+  documentos DocumentoAcao[]
+
+  equipe EquipeAcao[]
+
+  participacoes ParticipacaoAcao[]
+
+  atendimentos Atendimento[]
+
+  @@map("acao_extensionista")
+}
+
+model DocumentoAcao {
+  id Int @id @default(autoincrement())
+
+  acaoId Int
+
+  tipo TipoDocumento
+
+  titulo String @db.VarChar(200)
+
+  arquivoUrl String @db.Text
+
+  dataUpload DateTime @default(now())
+
+  acao AcaoExtensionista @relation(fields: [acaoId], references: [id])
+
+  @@map("documento_acao")
+}
+
+model Pessoa {
+  id Int @id @default(autoincrement())
+
+  cpf String @unique @db.VarChar(11)
+
+  nome String @db.VarChar(200)
+
+  dataNascimento DateTime @db.Date
+
+  sexo Sexo
+
+  telefone String? @db.VarChar(20)
+
+  email String? @db.VarChar(150)
+
+  endereco String? @db.Text
+
+  municipio String? @db.VarChar(100)
+
+  uf String? @db.Char(2)
+
+  participante Participante?
+
+  membroEquipe MembroEquipe?
+
+  aluno Aluno?
+
+  professor Professor?
+
+  @@map("pessoa")
+}
+
+model Participante {
+  id Int @id @default(autoincrement())
+
+  pessoaId Int @unique
+
+  escolaridade String? @db.VarChar(80)
+
+  nomeResponsavel String? @db.VarChar(200)
+
+  telResponsavel String? @db.VarChar(20)
+
+  observacoes String? @db.Text
+
+  pessoa Pessoa @relation(fields: [pessoaId], references: [id])
+
+  participacoes ParticipacaoAcao[]
+
+  prontuario Prontuario?
+
+  @@map("participante")
+}
+
+model MembroEquipe {
+  id Int @id @default(autoincrement())
+
+  pessoaId Int @unique
+
+  departamentoId Int?
+
+  tipo TipoMembro
+
+  matricula String? @db.VarChar(30)
+
+  vinculo String? @db.VarChar(80)
+
+  pessoa Pessoa @relation(fields: [pessoaId], references: [id])
+
+  departamento Departamento? @relation(fields: [departamentoId], references: [id])
+
+  equipeAcoes EquipeAcao[]
+
+  atendimentos Atendimento[]
+
+  @@map("membro_equipe")
+}
+
+model EquipeAcao {
+  id Int @id @default(autoincrement())
+
+  membroId Int
+
+  acaoId Int
+
+  papel String @db.VarChar(80)
+
+  dataEntrada DateTime @db.Date
+
+  dataSaida DateTime? @db.Date
+
+  horasDedicadas Decimal? @db.Decimal(6, 1)
+
+  membro MembroEquipe @relation(fields: [membroId], references: [id])
+
+  acao AcaoExtensionista @relation(fields: [acaoId], references: [id])
+
+  @@unique([membroId, acaoId])
+  @@map("equipe_acao")
+}
+
+model ParticipacaoAcao {
+  id Int @id @default(autoincrement())
+
+  participanteId Int
+
+  acaoId Int
+
+  dataParticipacao DateTime @db.Date
+
+  frequencia FrequenciaParticipacao @default(PRESENTE)
+
+  observacoes String? @db.Text
+
+  participante Participante @relation(fields: [participanteId], references: [id])
+
+  acao AcaoExtensionista @relation(fields: [acaoId], references: [id])
+
+  @@map("participacao_acao")
+}
+
+model Prontuario {
+  id Int @id @default(autoincrement())
+
+  participanteId Int @unique
+
+  numeroProntuario String @unique @db.VarChar(30)
+
+  dataAbertura DateTime @default(now()) @db.Date
+
+  tipoSanguineo String? @db.VarChar(5)
+
+  alergias String? @db.Text
+
+  obsGerais String? @db.Text
+
+  participante Participante @relation(fields: [participanteId], references: [id])
+
+  atendimentos Atendimento[]
+
+  @@map("prontuario")
+}
+
+model Atendimento {
+  id Int @id @default(autoincrement())
+
+  prontuarioId Int
+
+  acaoId Int
+
+  profissionalId Int
+
+  dataAtendimento DateTime @default(now())
+
+  tipoAtendimento TipoAtendimento
+
+  motivoConsulta String @db.Text
+
+  hipoteseDiagnostica String? @db.Text
+
+  conduta String? @db.Text
+
+  retornoPrevisto DateTime? @db.Date
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  prontuario Prontuario @relation(fields: [prontuarioId], references: [id])
+
+  acao AcaoExtensionista @relation(fields: [acaoId], references: [id])
+
+  profissional MembroEquipe @relation(fields: [profissionalId], references: [id])
+
+  avaliacaoFisica AvaliacaoFisica?
+
+  prescricoes Prescricao[]
+
+  @@map("atendimento")
+}
+
+model AvaliacaoFisica {
+  id Int @id @default(autoincrement())
+
+  atendimentoId Int @unique
+
+  pesoKg Decimal? @db.Decimal(5, 2)
+
+  alturaCm Decimal? @db.Decimal(5, 1)
+
+  imc Decimal? @db.Decimal(5, 2)
+
+  pressaoArterial String? @db.VarChar(10)
+
+  freqCardiaca Int?
+
+  temperatura Decimal? @db.Decimal(4, 1)
+
+  saturacaoO2 Decimal? @db.Decimal(4, 1)
+
+  atendimento Atendimento @relation(fields: [atendimentoId], references: [id])
+
+  @@map("avaliacao_fisica")
+}
+
+model Prescricao {
+  id Int @id @default(autoincrement())
+
+  atendimentoId Int
+
+  descricao String @db.Text
+
+  validade DateTime? @db.Date
+
+  observacoes String? @db.Text
+
+  atendimento Atendimento @relation(fields: [atendimentoId], references: [id])
+
+  @@map("prescricao")
+}
