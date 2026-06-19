@@ -2,6 +2,7 @@
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333";
 
@@ -96,7 +97,7 @@ export default function CadastroPage() {
         <header className="top">
           <div className="brand">
             <div className="heart">
-              <img src="/img/c.png" alt="Coração" />
+              <Image width={48} height={48} src="/img/c.png" alt="Coração" />
             </div>
 
             <div>
@@ -107,8 +108,8 @@ export default function CadastroPage() {
           </div>
 
           <div className="logos">
-            <img src="/img/uesc.png" alt="UESC" className="logo-uesc" />
-            <img src="/img/njbv.png" alt="NJBV" className="logo-njbv" />
+            <Image width={83} height={83} src="/img/uesc.png" alt="UESC" className="logo-uesc" />
+            <Image width={77} height={167} src="/img/njbv.png" alt="NJBV" className="logo-njbv" />
           </div>
         </header>
 
@@ -120,7 +121,7 @@ export default function CadastroPage() {
 
         <footer>
           <div className="insta">
-            <img src="/img/instagram.png" alt="Instagram" />
+            <Image width={27} height={27} src="/img/instagram.png" alt="Instagram" />
             <span>@njbv.oficial</span>
           </div>
         </footer>
@@ -129,7 +130,7 @@ export default function CadastroPage() {
       <section className="right-side">
         <div className="register-card">
           <div className="user-icon">
-            <img src="/img/user.png" alt="Usuário" />
+            <Image width={66} height={66} src="/img/user.png" alt="Usuário" />
           </div>
 
           <h2>Criar conta</h2>
@@ -185,7 +186,7 @@ export default function CadastroPage() {
             />
 
             <button type="button" className="google-btn">
-              <img src="/img/google.png" alt="Google" />
+              <Image width={48} height={48} src="/img/google.png" alt="Google" />
               Cadastrar com Google
             </button>
 

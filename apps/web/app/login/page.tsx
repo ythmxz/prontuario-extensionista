@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -7,7 +8,7 @@ export default function LoginPage() {
         <header className="top">
           <div className="brand">
             <div className="heart">
-              <img src="/img/c.png" alt="Coração" />
+              <Image width={48} height={48} src="/img/c.png" alt="Coração" />
             </div>
 
             <div>
@@ -18,8 +19,8 @@ export default function LoginPage() {
           </div>
 
           <div className="logos">
-            <img src="/img/uesc.png" alt="UESC" className="logo-uesc" />
-            <img src="/img/njbv.png" alt="NJBV" className="logo-njbv" />
+            <Image width={83} height={83} src="/img/uesc.png" alt="UESC" className="logo-uesc" />
+            <Image width={77} height={167} src="/img/njbv.png" alt="NJBV" className="logo-njbv" />
           </div>
         </header>
 
@@ -31,7 +32,7 @@ export default function LoginPage() {
 
         <footer>
           <div className="insta">
-            <img src="/img/instagram.png" alt="Instagram" />
+            <Image width={27} height={27} src="/img/instagram.png" alt="Instagram" />
             <span>@njbv.oficial</span>
           </div>
         </footer>
@@ -40,13 +41,13 @@ export default function LoginPage() {
       <section className="right-side">
         <div className="login-card">
           <div className="user-icon">
-            <img src="/img/user.png" alt="Usuário" />
+            <Image width={66} height={66} src="/img/user.png" alt="Usuário" />
           </div>
 
           <h2>Entrar na sua conta</h2>
 
           <button type="button" className="google-btn">
-            <img src="/img/google.png" alt="Google" />
+            <Image width={48} height={48} src="/img/google.png" alt="Google" />
             Continue com Google
           </button>
 

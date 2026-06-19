@@ -116,13 +116,13 @@ docker compose ps
 ### 5. Aplicar as migrations
 
 ```bash
-pnpm --filter @prontuario-extensionista/api exec prisma migrate dev
+pnpm --filter api exec prisma migrate dev
 ```
 
 ### 6. Gerar o Prisma Client
 
 ```bash
-pnpm --filter @prontuario-extensionista/api exec prisma generate
+pnpm --filter api exec prisma generate
 ```
 
 ---
@@ -138,7 +138,7 @@ pnpm dev
 ### Rodar apenas o backend
 
 ```bash
-pnpm --filter @prontuario-extensionista/api dev
+pnpm --filter api dev
 ```
 
 O servidor estará disponível em `http://localhost:3333`.
@@ -146,7 +146,7 @@ O servidor estará disponível em `http://localhost:3333`.
 ### Rodar apenas o frontend
 
 ```bash
-pnpm --filter @prontuario-extensionista/web dev
+pnpm --filter web dev
 ```
 
 ---
