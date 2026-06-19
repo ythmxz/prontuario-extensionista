@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import bcrypt from "bcryptjs";
-import { Prisma } from "../generated/prisma/client";
-import { prisma } from "../lib/prisma";
+import { Prisma } from "../generated/prisma/client.ts";
+import { prisma } from "../lib/prisma.ts";
 
 const userSelect = {
   id: true,

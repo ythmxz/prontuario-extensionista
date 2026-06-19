@@ -1,26 +1,29 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
     "dev": "tsx watch src/server.ts",
-    "lint": "eslint .",
-    "format": "prettier . --write"
+    "lint": "tsc --noEmit",
+    "start": "node dist/server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "fastify": "^5.8.5"
+    "@fastify/cors": "^11.2.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "fastify": "^5.8.5",
+    "pg": "^8.21.0"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
-    "@types/node": "^25.7.0",
-    "eslint": "^9.39.1",
-    "prettier": "^3.8.3",
-    "tsx": "^4.21.0",
+    "@prontuario-extensionista/tsconfig": "workspace:*",
+    "@types/node": "^25.9.1",
+    "@types/pg": "^8.20.0",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   }
 }
