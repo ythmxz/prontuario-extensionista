@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import { authRoutes } from "./routes/auth.ts";
 import { usersRoutes } from "./routes/users.ts";
 import { departmentsRoutes } from "./routes/departments.ts";
+import { cursosRoutes } from "./routes/cursos.ts";
 import { colegiadosRoutes } from "./routes/colegiados.ts";
 
 const app = Fastify({ logger: false });
@@ -12,6 +13,7 @@ app.register(cors, {
 });
 
 app.register(authRoutes);
+app.register(cursosRoutes);
 app.register(usersRoutes);
 app.register(departmentsRoutes);
 app.register(colegiadosRoutes);
