@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma.ts";
-import { setupCrudRoutes } from "./common.ts";
+import { setupCrudRoutes, FieldConfig } from "./common.ts";
 
 const professorSelect = {
   id: true,
@@ -11,8 +11,8 @@ const professorSelect = {
 };
 
 export async function professoresRoutes(app: FastifyInstance) {
-  const toTrimmedString = (x: any): string => String(x).trim();
-  const trimmedStringProcess = {
+  const toTrimmedString = (x: any): any => String(x).trim();
+  const trimmedStringProcess: FieldConfig = {
     type: "string",
     process: toTrimmedString,
   };

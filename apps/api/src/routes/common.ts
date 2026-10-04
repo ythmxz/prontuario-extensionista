@@ -6,7 +6,7 @@ export type FieldType = "string" | "number";
 export type FieldConfig = {
   type: FieldType;
   optional?: boolean;
-  process?: (value: unknown) => unknown;
+  process?: (value: any) => any;
 };
 
 export type RouteOptions = {
@@ -45,10 +45,9 @@ export function setupCrudRoutes(options: RouteOptions): void {
   const { app, path, model, fields, select } = options;
   const idField = options.idField ?? "id";
 
-  if (!fields[idField]) {
-    throw new Error(
-      `O campo de identificacao "${idField}" nao foi configurado.`,
-    );
+  const idConfig = fields[idField];
+  if (!idConfig) {
+    throw new Error(`O campo de identificacao "${idField}" nao foi configurado.`);
   }
 
   const messages = {
@@ -62,15 +61,13 @@ export function setupCrudRoutes(options: RouteOptions): void {
     ...options.messages,
   };
 
-  const parseId = (id: string): number | string | undefined => {
-    const idConfig = fields[idField];
-    if (!idConfig) return undefined;
-    return processField(idField, id);
+  const parseId = (id: string): number | undefined => {
+    const ret = processField(idField, id);
+    return (typeof ret === "number") ? ret : undefined;
   };
 
   const processField = (fieldName: string, value: unknown): unknown | undefined => {
     const config = fields[fieldName];
-
     if (!config) return undefined;
 
     let processedValue = value;
@@ -84,19 +81,13 @@ export function setupCrudRoutes(options: RouteOptions): void {
         return undefined;
       }
 
-      if (
-        typeof processedValue !== "number" ||
-        !Number.isFinite(processedValue)
-      ) {
+      if (typeof processedValue !== "number" || !Number.isFinite(processedValue)) {
         return undefined;
       }
     }
 
     if (config.type === "string") {
-      if (typeof value !== "string") {
-        return undefined;
-      }
-
+      if (typeof value !== "string") return undefined;
       processedValue = value;
     }
 
