@@ -53,7 +53,8 @@ export function setupCrudRoutes(options: RouteOptions): void {
   const messages = {
     notFound: "Registro nao encontrado.",
     invalidId: "Id invalido.",
-    missingData: "Dados obrigatorios ausentes.",
+    missingData: "Dados obrigatorios ausentes.", // TODO: listar quais dados estão ausentes
+    // TODO: permitir que idField seja omitido em casos de criação de valores
     invalidData: "Dados invalidos.",
     duplicate: "Registro ja cadastrado.",
     foreignKey: "Um ou mais IDs invalidos.",
@@ -225,7 +226,7 @@ export function setupCrudRoutes(options: RouteOptions): void {
     return record;
   });
 
-  // create
+  // Criação (via POST)
   app.post(path, async (request, reply) => {
     const body = request.body as ParamMap;
     const data = parseBody(body, false);
@@ -348,3 +349,8 @@ export function setupCrudRoutes(options: RouteOptions): void {
     }
   });
 }
+
+export const trimmedStringFieldConfig: FieldConfig = {
+  type: "string",
+  process: (x: any): any => String(x).trim(),
+};
