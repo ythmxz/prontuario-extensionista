@@ -12,7 +12,7 @@ const tipoAcaoSelect = {
 export async function tiposAcaoRoutes(app: FastifyInstance) {
   setupCrudRoutes({
     app,
-    path: "/tiposAcao",
+    path: "/tipos-acao",
     model: prisma.tipoAcao,
     select: tipoAcaoSelect,
 

@@ -14,7 +14,7 @@ const localAcaoSelect = {
 export async function locaisAcaoRoutes(app: FastifyInstance) {
   setupCrudRoutes({
     app,
-    path: "/locaisAcao",
+    path: "/locais-acao",
     model: prisma.localAcao,
     select: localAcaoSelect,
 

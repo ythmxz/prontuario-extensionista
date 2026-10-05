@@ -14,7 +14,7 @@ const linhaAtuacaoSelect = {
 export async function linhasAtuacaoRoutes(app: FastifyInstance) {
   setupCrudRoutes({
     app,
-    path: "/linhasAtuacao",
+    path: "/linhas-atuacao",
     model: prisma.linhaAtuacao,
     select: linhaAtuacaoSelect,
 
