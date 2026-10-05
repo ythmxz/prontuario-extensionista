@@ -10,6 +10,11 @@ import { nucleosRoutes } from "./routes/nucleos.ts";
 import { linhasAtuacaoRoutes } from "./routes/linhasAtuacao.ts";
 import { tiposAcaoRoutes } from "./routes/tiposAcao.ts";
 import { locaisAcaoRoutes } from "./routes/locaisAcao.ts";
+// --- Acréscimos dos módulos: ---
+import { membrosEquipeRoutes } from "./routes/membrosEquipe.ts";
+import { acoesExtensionistasRoutes } from "./routes/acoesExtensionistas.ts";
+import { documentosAcaoRoutes } from "./routes/documentosAcao.ts";
+import { associacoesAcaoRoutes } from "./routes/associacoesAcao.ts";
 
 const app = Fastify({ logger: false });
 
@@ -27,6 +32,11 @@ app.register(nucleosRoutes);
 app.register(linhasAtuacaoRoutes);
 app.register(tiposAcaoRoutes);
 app.register(locaisAcaoRoutes);
+// --- Registro dos novos módulos ---
+app.register(membrosEquipeRoutes);
+app.register(acoesExtensionistasRoutes);
+app.register(documentosAcaoRoutes);
+app.register(associacoesAcaoRoutes);
 
 app.get("/health", async () => {
   return { status: "ok" };
