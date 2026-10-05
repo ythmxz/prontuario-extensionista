@@ -8,6 +8,7 @@ import { colegiadosRoutes } from "./routes/colegiados.ts";
 import { professoresRoutes } from "./routes/professores.ts";
 import { nucleosRoutes } from "./routes/nucleos.ts";
 import { linhasAtuacaoRoutes } from "./routes/linhasAtuacao.ts";
+import { tiposAcaoRoutes } from "./routes/tiposAcao.ts";
 
 const app = Fastify({ logger: false });
 
@@ -23,6 +24,7 @@ app.register(colegiadosRoutes);
 app.register(professoresRoutes);
 app.register(nucleosRoutes);
 app.register(linhasAtuacaoRoutes);
+app.register(tiposAcaoRoutes);
 
 app.get("/health", async () => {
   return { status: "ok" };
