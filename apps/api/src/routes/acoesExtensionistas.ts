@@ -1,12 +1,18 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma.ts";
-import { setupCrudRoutes, trimmedStringFieldConfig } from "./common.ts";
+import {
+  setupCrudRoutes,
+  trimmedStringFieldConfig,
+} from "./common.ts";
 
-export async function acoesExtensionistasRoutes(app: FastifyInstance) {
+export async function acoesExtensionistasRoutes(
+  app: FastifyInstance
+) {
   setupCrudRoutes({
     app,
     path: "/acoes-extensionistas",
     model: prisma.acaoExtensionista,
+
     select: {
       id: true,
       titulo: true,
@@ -21,23 +27,62 @@ export async function acoesExtensionistasRoutes(app: FastifyInstance) {
       tipoAcaoId: true,
       localId: true,
     },
+
     fields: {
-      id: { type: "number" },
-      linhaAtuacaoId: { type: "number" },
-      tipoAcaoId: { type: "number" },
-      localId: { type: "number" },
+      // Gerado automaticamente
+      id: {
+        type: "number",
+        optional: true,
+      },
+
+      // Obrigatórios
+      linhaAtuacaoId: {
+        type: "number",
+      },
+
+      tipoAcaoId: {
+        type: "number",
+      },
+
+      localId: {
+        type: "number",
+      },
+
       titulo: trimmedStringFieldConfig,
+
       descricao: trimmedStringFieldConfig,
-      dataInicio: { type: "string" },
-      dataFim: { type: "string" },
-      cargaHoraria: { type: "number" },
-      modalidade: { type: "string" },
+
+      dataInicio: {
+        type: "string",
+      },
+
+      // Opcional no banco
+      dataFim: {
+        type: "string",
+        optional: true,
+      },
+
+      cargaHoraria: {
+        type: "number",
+      },
+
+      modalidade: {
+        type: "string",
+      },
+
       publicoAlvo: trimmedStringFieldConfig,
-      status: { type: "string" },
+
+      status: {
+        type: "string",
+      },
     },
+
     messages: {
-      notFound: "Ação extensionista não encontrada.",
-      foreignKey: "Linha de Atuação, Tipo de Ação ou Local não existe.",
+      notFound:
+        "Ação extensionista não encontrada.",
+
+      foreignKey:
+        "Linha de Atuação, Tipo de Ação ou Local não existe.",
     },
   });
 }

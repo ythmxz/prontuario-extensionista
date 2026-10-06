@@ -258,51 +258,32 @@ model LocalAcao {
 }
 
 model AcaoExtensionista {
-  id Int @id @default(autoincrement())
+  id              Int            @id @default(autoincrement())
+  linhaAtuacaoId  Int?           // Tornando opcional
+  tipoAcaoId      Int
+  localId         Int
+  titulo          String         @db.VarChar(200)
+  descricao       String         @db.Text
+  dataInicio      DateTime       @db.Date
+  dataFim         DateTime?      @db.Date
+  cargaHoraria    Decimal        @db.Decimal(5, 1)
+  modalidade      ModalidadeAcao
+  publicoAlvo     String         @db.VarChar(200)
+  status          StatusAcao     @default(PLANEJADA)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
-  linhaAtuacaoId Int
+  linhaAtuacao    LinhaAtuacao?  @relation(fields: [linhaAtuacaoId], references: [id]) // Adicionado o '?' aqui também
+  tipoAcao        TipoAcao       @relation(fields: [tipoAcaoId], references: [id])
+  local           LocalAcao      @relation(fields: [localId], references: [id])
 
-  tipoAcaoId Int
-
-  localId Int
-
-  titulo String @db.VarChar(200)
-
-  descricao String @db.Text
-
-  dataInicio DateTime @db.Date
-
-  dataFim DateTime? @db.Date
-
-  cargaHoraria Decimal @db.Decimal(5, 1)
-
-  modalidade ModalidadeAcao
-
-  publicoAlvo String @db.VarChar(200)
-
-  status StatusAcao @default(PLANEJADA)
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
-
-  linhaAtuacao LinhaAtuacao @relation(fields: [linhaAtuacaoId], references: [id])
-
-  tipoAcao TipoAcao @relation(fields: [tipoAcaoId], references: [id])
-
-  local LocalAcao @relation(fields: [localId], references: [id])
-
-  documentos DocumentoAcao[]
-
-  equipe EquipeAcao[]
-
-  participacoes ParticipacaoAcao[]
-
-  atendimentos Atendimento[]
+  documentos      DocumentoAcao[]
+  equipe          EquipeAcao[]
+  participacoes   ParticipacaoAcao[]
+  atendimentos    Atendimento[]
 
   @@map("acao_extensionista")
 }
-
 model DocumentoAcao {
   id Int @id @default(autoincrement())
 
