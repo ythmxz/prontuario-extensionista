@@ -28,7 +28,6 @@ export async function locaisAcaoRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Local de acao nao encontrado.",
-      duplicate: "Local de acao ja cadastrado.",
       hasRelations: "Local de acao possui registros vinculados.",
     },
   });

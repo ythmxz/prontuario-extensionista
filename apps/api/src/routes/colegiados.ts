@@ -23,7 +23,6 @@ export async function colegiadosRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Colegiado nao encontrado.",
-      duplicate: "Colegiado ja cadastrado.",
       foreignKey: "Departamento informado nao existe.",
       hasRelations: "Colegiado possui registros vinculados.",
     },

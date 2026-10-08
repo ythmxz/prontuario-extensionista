@@ -46,7 +46,6 @@ export async function cursosRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Curso nao encontrado.",
-      duplicate: "Curso ja cadastrado.",
       foreignKey: "Colegiado informado nao existe.",
       hasRelations: "Curso possui registros vinculados.",
     },

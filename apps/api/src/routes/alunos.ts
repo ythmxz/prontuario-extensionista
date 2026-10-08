@@ -46,7 +46,6 @@ export async function alunosRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Aluno nao encontrado.",
-      duplicate: "Aluno ja cadastrado.",
       foreignKey: "Pessoa ou curso informado nao existe.",
       hasRelations: "Aluno possui registros vinculados.",
     },

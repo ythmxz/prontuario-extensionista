@@ -28,7 +28,6 @@ export async function linhasAtuacaoRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Linha de atuacao nao encontrada.",
-      duplicate: "Linha de atuacao ja cadastrada.",
       foreignKey: "Nucleo informado nao existe.",
       hasRelations: "Nucleo possui registros vinculados.",
     },

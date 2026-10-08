@@ -27,7 +27,6 @@ export async function professoresRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Professor nao encontrado.",
-      duplicate: "Professor ja cadastrado.",
       foreignKey: "Pessoa ou departamento informado nao existe.",
       hasRelations: "Professor possui registros vinculados.",
     },

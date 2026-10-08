@@ -72,7 +72,6 @@ export async function pessoasRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Pessoa nao encontrada.",
-      duplicate: "Pessoa ja cadastrada.",
       foreignKey: "Dados relacionados informados nao existem.",
       hasRelations: "Pessoa possui registros vinculados.",
     },

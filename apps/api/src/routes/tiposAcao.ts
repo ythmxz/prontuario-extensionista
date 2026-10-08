@@ -24,7 +24,6 @@ export async function tiposAcaoRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Tipo de açao nao encontrada.",
-      duplicate: "Tipo de açao ja cadastrada.",
       hasRelations: "Tipo de acao possui registros vinculados.",
     },
   });

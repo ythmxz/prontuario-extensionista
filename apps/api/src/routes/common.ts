@@ -9,6 +9,13 @@ export type FieldConfig = {
   process?: (value: any) => any;
 };
 
+export type ErrorMessages = {
+  notFound?: string;
+  invalidId?: string;
+  foreignKey?: string;
+  hasRelations?: string;
+};
+
 export type RouteOptions = {
   app: FastifyInstance;
   path: string;
@@ -16,15 +23,7 @@ export type RouteOptions = {
   idField?: string;
   fields: Record<string, FieldConfig>;
   select: Record<string, boolean>;
-  messages?: {
-    notFound?: string;
-    invalidId?: string;
-    missingData?: string;
-    invalidData?: string;
-    duplicate?: string;
-    foreignKey?: string;
-    hasRelations?: string;
-  };
+  messages?: ErrorMessages,
 };
 
 /**
@@ -50,13 +49,11 @@ export function setupCrudRoutes(options: RouteOptions): void {
     throw new Error(`O campo de identificacao "${idField}" nao foi configurado.`);
   }
 
-  const messages = {
+  const duplicateMessage = "Registro ja cadastrado.";
+
+  const messages: ErrorMessages = {
     notFound: "Registro nao encontrado.",
     invalidId: "Id invalido.",
-    missingData: "Dados obrigatorios ausentes.", // TODO: listar quais dados estão ausentes
-    // TODO: permitir que idField seja omitido em casos de criação de valores
-    invalidData: "Dados invalidos.",
-    duplicate: "Registro ja cadastrado.",
     foreignKey: "Um ou mais IDs invalidos.",
     hasRelations: "Registro possui registros vinculados.",
     ...options.messages,
@@ -109,7 +106,7 @@ export function setupCrudRoutes(options: RouteOptions): void {
 
       if (error.code === "P2002") {
         return reply.status(409).send({
-          message: messages.duplicate,
+          message: duplicateMessage,
         });
       }
 
@@ -133,45 +130,51 @@ export function setupCrudRoutes(options: RouteOptions): void {
     | { valid: true; value: Record<string, unknown> }
     | { valid: false; message: string };
 
-  const parseBody = (body: Record<string, unknown>, partial: boolean): ParseBodyRet => {
+  const parseBody = (body: Record<string, unknown>, partial: boolean, needId: boolean): ParseBodyRet => {
     const value: Record<string, unknown> = {};
+
+    // lista de campos que estão faltando ou inválidos (vai ser montada nas iterações abaixo)
+    const badFields: string[] = [];
 
     for (const [fieldName, config] of Object.entries(fields)) {
       const fieldValue = body[fieldName];
 
       if (fieldValue === undefined || fieldValue === null) {
-        if (!partial && !config.optional) {
-          return {
-            valid: false,
-            message: messages.missingData,
-          };
+        if (!partial && !config.optional && !(fieldName === idField && !needId)) {
+          // reclamar que o valor está faltando
+          badFields.push(fieldName);
         }
 
+        // pular esta iteração e ir p/ o próximo campo
         continue;
       }
 
       const processedValue = processField(fieldName, fieldValue);
 
       if (processedValue === undefined) {
-        return {
-          valid: false,
-          message: messages.invalidData,
-        };
+        badFields.push(`${fieldName} (dados invalidos)`);
       }
 
+      // considerar campos de string vazios como faltando
+      // FIXME: é bom esse sempre ser o caso?
       if (
         config.type === "string" &&
         typeof processedValue === "string" &&
         processedValue.length === 0 &&
         !config.optional
       ) {
-        return {
-          valid: false,
-          message: messages.missingData,
-        };
+        badFields.push(fieldName);
+        continue;
       }
 
       value[fieldName] = processedValue;
+    }
+
+    if (badFields.length > 0) {
+      return {
+        valid: false,
+        message: "Campos ausentes/invalidos: " + badFields.join(", "),
+      }
     }
 
     return {
@@ -229,7 +232,7 @@ export function setupCrudRoutes(options: RouteOptions): void {
   // Criação (via POST)
   app.post(path, async (request, reply) => {
     const body = request.body as ParamMap;
-    const data = parseBody(body, false);
+    const data = parseBody(body, false, false);
 
     if (!data.valid) {
       return reply.status(400).send({
@@ -261,7 +264,7 @@ export function setupCrudRoutes(options: RouteOptions): void {
     }
 
     const body = request.body as ParamMap;
-    const data = parseBody(body, false);
+    const data = parseBody(body, false, false);
 
     if (!data.valid) {
       return reply.status(400).send({
@@ -296,7 +299,7 @@ export function setupCrudRoutes(options: RouteOptions): void {
     }
 
     const body = request.body as ParamMap;
-    const data = parseBody(body, true);
+    const data = parseBody(body, true, false);
 
     if (!data.valid) {
       return reply.status(400).send({

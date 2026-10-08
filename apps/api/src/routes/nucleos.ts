@@ -32,7 +32,6 @@ export async function nucleosRoutes(app: FastifyInstance) {
 
     messages: {
       notFound: "Nucleo nao encontrado.",
-      duplicate: "Nucleo ja cadastrado.",
       foreignKey: "Departamento informado nao existe.",
       hasRelations: "Departamento possui registros vinculados.",
     },
