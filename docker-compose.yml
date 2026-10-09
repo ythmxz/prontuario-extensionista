@@ -2,20 +2,15 @@ services:
   postgres:
     image: postgres:17-alpine
     container_name: prontuario-extensionista-postgres
-    restart: unless-stopped
+    restart: always
     environment:
-      POSTGRES_USER: docker
-      POSTGRES_PASSWORD: docker
-      POSTGRES_DB: prontuario
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: prontuario_db
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U docker -d prontuario"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
 volumes:
   postgres_data:
