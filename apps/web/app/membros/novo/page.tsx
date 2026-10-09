@@ -267,6 +267,19 @@ export default function NovoMembroPage() {
                 </option>
               ))}
             </select>
+
+            <Link
+              href="/pessoas/novo?retorno=/membros/novo"
+              style={{
+                display: "inline-block",
+                marginTop: "0.5rem",
+                color: "#0070f3",
+                fontSize: "0.9rem",
+                textDecoration: "none",
+              }}
+            >
+              + Cadastrar nova pessoa
+            </Link>
           </div>
 
           <div>

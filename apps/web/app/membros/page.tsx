@@ -89,6 +89,10 @@ function formatarStatus(
   }
 }
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:3333";
+
 export default function MembrosPage() {
   const [membros, setMembros] =
     useState<Membro[]>([]);
@@ -186,35 +190,35 @@ export default function MembrosPage() {
         vinculosResponse,
       ] = await Promise.all([
         fetch(
-          "http://localhost:3333/membros-equipe",
+          `${API_URL}/membros-equipe`,
           {
             cache: "no-store",
           }
         ),
 
         fetch(
-          "http://localhost:3333/pessoas",
+          `${API_URL}/pessoas`,
           {
             cache: "no-store",
           }
         ),
 
         fetch(
-          "http://localhost:3333/departments",
+          `${API_URL}/departments`,
           {
             cache: "no-store",
           }
         ),
 
         fetch(
-          "http://localhost:3333/acoes-extensionistas",
+          `${API_URL}/acoes-extensionistas`,
           {
             cache: "no-store",
           }
         ),
 
         fetch(
-          "http://localhost:3333/equipe-acoes",
+          `${API_URL}/equipe-acoes`,
           {
             cache: "no-store",
           }
@@ -374,7 +378,7 @@ export default function MembrosPage() {
       }
 
       const response = await fetch(
-        "http://localhost:3333/equipe-acoes",
+        `${API_URL}/equipe-acoes`,
         {
           method: "POST",
           headers: {

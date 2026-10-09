@@ -3,13 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:3333";
+
 export default function AcoesPage() {
   const [acoes, setAcoes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3333/acoes-extensionistas")
+    fetch(`${API_URL}/acoes-extensionistas`)
       .then(async (res) => {
         if (!res.ok) {
           throw new Error(`Erro na API: ${res.status} ${res.statusText}`);

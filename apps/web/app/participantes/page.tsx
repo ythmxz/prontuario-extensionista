@@ -117,6 +117,10 @@ function acaoAnterior(
   );
 }
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:3333";
+
 export default function ParticipantesPage() {
   const [participantes, setParticipantes] =
     useState<Participante[]>([]);
@@ -137,7 +141,7 @@ export default function ParticipantesPage() {
         setErro("");
 
         const response = await fetch(
-          "http://localhost:3333/participantes",
+          `${API_URL}/participantes`,
           {
             method: "GET",
             cache: "no-store",

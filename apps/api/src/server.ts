@@ -24,8 +24,6 @@ import { locaisAcaoRoutes } from "./routes/locaisAcao.ts";
 import { alunosRoutes } from "./routes/alunos.ts";
 import { pessoasRoutes } from "./routes/pessoas.ts";
 
-import { pessoasRoutes } from "./routes/pessoas.ts";
-
 import { participantesRoutes } from "./routes/participantes.ts";
 
 import { membrosEquipeRoutes } from "./routes/membrosEquipe.ts";
@@ -64,8 +62,6 @@ app.register(tiposAcaoRoutes);
 
 app.register(locaisAcaoRoutes);
 app.register(alunosRoutes);
-app.register(pessoasRoutes);
-
 app.register(pessoasRoutes);
 
 app.register(participantesRoutes);

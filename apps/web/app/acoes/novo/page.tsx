@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:3333";
+
 export default function NovaAcaoPage() {
   const router = useRouter();
 
@@ -105,7 +109,7 @@ export default function NovaAcaoPage() {
       console.log("Payload enviado para a API:", payload);
 
       const response = await fetch(
-        "http://localhost:3333/acoes-extensionistas",
+        `${API_URL}/acoes-extensionistas`,
         {
           method: "POST",
           headers: {
