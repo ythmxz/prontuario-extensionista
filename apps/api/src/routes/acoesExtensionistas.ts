@@ -29,49 +29,35 @@ export async function acoesExtensionistasRoutes(
     },
 
     fields: {
-      // Gerado automaticamente
       id: {
         type: "number",
         optional: true,
       },
-
-      // Obrigatórios
       linhaAtuacaoId: {
         type: "number",
       },
-
       tipoAcaoId: {
         type: "number",
       },
-
       localId: {
         type: "number",
       },
-
       titulo: trimmedStringFieldConfig,
-
       descricao: trimmedStringFieldConfig,
-
       dataInicio: {
         type: "string",
       },
-
-      // Opcional no banco
       dataFim: {
         type: "string",
         optional: true,
       },
-
       cargaHoraria: {
         type: "number",
       },
-
       modalidade: {
         type: "string",
       },
-
       publicoAlvo: trimmedStringFieldConfig,
-
       status: {
         type: "string",
       },

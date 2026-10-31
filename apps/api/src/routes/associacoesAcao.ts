@@ -28,34 +28,24 @@ export async function associacoesAcaoRoutes(
     },
 
     fields: {
-      // Gerado automaticamente
       id: {
         type: "number",
         optional: true,
       },
-
-      // Obrigatórios
       membroId: {
         type: "number",
       },
-
       acaoId: {
         type: "number",
       },
-
       papel: trimmedStringFieldConfig,
-
       dataEntrada: {
         type: "string",
       },
-
-      // Opcional
       dataSaida: {
         type: "string",
         optional: true,
       },
-
-      // Opcional
       horasDedicadas: {
         type: "number",
         optional: true,
@@ -63,14 +53,8 @@ export async function associacoesAcaoRoutes(
     },
 
     messages: {
-      notFound:
-        "Registro de equipe não encontrado.",
-
-      duplicate:
-        "Membro já vinculado a esta ação.",
-
-      foreignKey:
-        "Membro ou Ação não existe.",
+      notFound: "Registro de equipe não encontrado.",
+      foreignKey: "Membro ou Ação não existe.",
     },
   });
 

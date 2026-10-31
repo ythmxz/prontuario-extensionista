@@ -23,35 +23,24 @@ export async function membrosEquipeRoutes(
     },
 
     fields: {
-      // Gerado automaticamente
       id: {
         type: "number",
         optional: true,
       },
-
-      // Obrigatório
       pessoaId: {
         type: "number",
       },
-
-      // Opcional
       departamentoId: {
         type: "number",
         optional: true,
       },
-
-      // Obrigatório
       tipo: {
         type: "string",
       },
-
-      // Opcional
       matricula: {
         ...trimmedStringFieldConfig,
         optional: true,
       },
-
-      // Opcional
       vinculo: {
         ...trimmedStringFieldConfig,
         optional: true,
@@ -59,14 +48,8 @@ export async function membrosEquipeRoutes(
     },
 
     messages: {
-      notFound:
-        "Membro de equipe não encontrado.",
-
-      duplicate:
-        "Pessoa já cadastrada na equipe.",
-
-      foreignKey:
-        "Pessoa ou Departamento não existe.",
+      notFound: "Membro de equipe não encontrado.",
+      foreignKey: "Pessoa ou Departamento não existe.",
     },
   });
 }
