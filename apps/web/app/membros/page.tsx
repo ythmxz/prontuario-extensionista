@@ -94,90 +94,42 @@ const API_URL =
   "http://localhost:3333";
 
 export default function MembrosPage() {
-  const [membros, setMembros] =
-    useState<Membro[]>([]);
+  const [membros, setMembros] = useState<Membro[]>([]);
+  const [pessoas, setPessoas] = useState<Pessoa[]>([]);
+  const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
+  const [acoes, setAcoes] = useState<Acao[]>([]);
+  const [vinculos, setVinculos] = useState<EquipeAcao[]>([]);
+  const [membroId, setMembroId] = useState("");
+  const [acaoId, setAcaoId] = useState("");
+  const [papel, setPapel] = useState("");
+  const [dataEntrada, setDataEntrada] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
 
-  const [pessoas, setPessoas] =
-    useState<Pessoa[]>([]);
-
-  const [departamentos, setDepartamentos] =
-    useState<Departamento[]>([]);
-
-  const [acoes, setAcoes] =
-    useState<Acao[]>([]);
-
-  const [vinculos, setVinculos] =
-    useState<EquipeAcao[]>([]);
-
-  const [membroId, setMembroId] =
-    useState("");
-
-  const [acaoId, setAcaoId] =
-    useState("");
-
-  const [papel, setPapel] =
-    useState("");
-
-  const [dataEntrada, setDataEntrada] =
-    useState(
-      new Date()
-        .toISOString()
-        .slice(0, 10)
-    );
-
-  const [
-    horasDedicadas,
-    setHorasDedicadas,
-  ] = useState("");
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [salvando, setSalvando] =
-    useState(false);
-
-  const [erro, setErro] =
-    useState("");
-
-  const [sucesso, setSucesso] =
-    useState("");
+  const [horasDedicadas, setHorasDedicadas] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
 
   const pessoaPorId = useMemo(
-    () =>
-      new Map(
-        pessoas.map((pessoa) => [
-          pessoa.id,
-          pessoa,
-        ])
-      ),
+    () => new Map(pessoas.map((pessoa) => [pessoa.id, pessoa])),
     [pessoas]
   );
 
   const departamentoPorId = useMemo(
-    () =>
-      new Map(
-        departamentos.map(
-          (departamento) => [
-            departamento.id,
-            departamento,
-          ]
-        )
-      ),
+    () => new Map(departamentos.map((departamento) => [departamento.id, departamento])),
     [departamentos]
   );
 
   const acaoPorId = useMemo(
-    () =>
-      new Map(
-        acoes.map((acao) => [
-          acao.id,
-          acao,
-        ])
-      ),
+    () => new Map(acoes.map((acao) => [acao.id, acao])),
     [acoes]
   );
 
-  async function carregarDados() {
+  async function carregarDados(x: { ignore: boolean }) {
+    if (x.ignore) return;
+
     try {
       setLoading(true);
       setErro("");
@@ -189,70 +141,32 @@ export default function MembrosPage() {
         acoesResponse,
         vinculosResponse,
       ] = await Promise.all([
-        fetch(
-          `${API_URL}/membros-equipe`,
-          {
-            cache: "no-store",
-          }
-        ),
-
-        fetch(
-          `${API_URL}/pessoas`,
-          {
-            cache: "no-store",
-          }
-        ),
-
-        fetch(
-          `${API_URL}/departments`,
-          {
-            cache: "no-store",
-          }
-        ),
-
-        fetch(
-          `${API_URL}/acoes-extensionistas`,
-          {
-            cache: "no-store",
-          }
-        ),
-
-        fetch(
-          `${API_URL}/equipe-acoes`,
-          {
-            cache: "no-store",
-          }
-        ),
+        fetch(`${API_URL}/membros-equipe`, { cache: "no-store" }),
+        fetch(`${API_URL}/pessoas`, { cache: "no-store" }),
+        fetch(`${API_URL}/departments`, { cache: "no-store" }),
+        fetch(`${API_URL}/acoes-extensionistas`, { cache: "no-store" }),
+        fetch(`${API_URL}/equipe-acoes`, { cache: "no-store" }),
       ]);
+      if (x.ignore) return;
 
       if (!membrosResponse.ok) {
-        throw new Error(
-          "Erro ao carregar membros."
-        );
+        throw new Error("Erro ao carregar membros.");
       }
 
       if (!pessoasResponse.ok) {
-        throw new Error(
-          "Erro ao carregar pessoas."
-        );
+        throw new Error("Erro ao carregar pessoas.");
       }
 
       if (!departamentosResponse.ok) {
-        throw new Error(
-          "Erro ao carregar departamentos."
-        );
+        throw new Error("Erro ao carregar departamentos.");
       }
 
       if (!acoesResponse.ok) {
-        throw new Error(
-          "Erro ao carregar ações."
-        );
+        throw new Error("Erro ao carregar ações.");
       }
 
       if (!vinculosResponse.ok) {
-        throw new Error(
-          "Erro ao carregar vínculos."
-        );
+        throw new Error("Erro ao carregar vínculos.");
       }
 
       const [
@@ -268,49 +182,26 @@ export default function MembrosPage() {
         acoesResponse.json(),
         vinculosResponse.json(),
       ]);
+      if (x.ignore) return;
 
-      setMembros(
-        Array.isArray(membrosData)
-          ? membrosData
-          : []
-      );
-
-      setPessoas(
-        Array.isArray(pessoasData)
-          ? pessoasData
-          : []
-      );
-
-      setDepartamentos(
-        Array.isArray(departamentosData)
-          ? departamentosData
-          : []
-      );
-
-      setAcoes(
-        Array.isArray(acoesData)
-          ? acoesData
-          : []
-      );
-
-      setVinculos(
-        Array.isArray(vinculosData)
-          ? vinculosData
-          : []
-      );
+      setMembros(Array.isArray(membrosData) ? membrosData : []);
+      setPessoas(Array.isArray(pessoasData) ? pessoasData : []);
+      setDepartamentos(Array.isArray(departamentosData) ? departamentosData : []);
+      setAcoes(Array.isArray(acoesData) ? acoesData : []);
+      setVinculos(Array.isArray(vinculosData) ? vinculosData : []);
     } catch (error) {
-      setErro(
-        error instanceof Error
-          ? error.message
-          : "Erro ao carregar dados."
-      );
+      if (x.ignore) return;
+      setErro(error instanceof Error ? error.message : "Erro ao carregar dados.");
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    carregarDados();
+    // FIXME: "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    const x = { ignore: false };
+    carregarDados(x);
+    return () => { x.ignore = true; }
   }, []);
 
   const membrosSemVinculo =
