@@ -185,9 +185,8 @@ export default function CadastroPage() {
               required
             />
 
-            <button type="button" className="google-btn">
-              <Image width={48} height={48} src="/img/google.png" alt="Google" />
-              Cadastrar com Google
+            <button type="submit" className="signup-btn" disabled={isLoading}>
+              {isLoading ? "Cadastrando..." : "Cadastrar"}
             </button>
 
             <div className="divider">
@@ -196,8 +195,9 @@ export default function CadastroPage() {
               <span></span>
             </div>
 
-            <button type="submit" className="signup-btn" disabled={isLoading}>
-              {isLoading ? "Cadastrando..." : "Cadastrar"}
+            <button type="button" className="google-btn">
+              <Image width={48} height={48} src="/img/google.png" alt="Google" />
+              Cadastrar com Google
             </button>
 
             {message ? (
