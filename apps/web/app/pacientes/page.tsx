@@ -139,7 +139,7 @@ function PatientRow({
   age,
   date,
   status,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <tr
       style={{

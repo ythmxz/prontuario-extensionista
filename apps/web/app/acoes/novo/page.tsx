@@ -121,7 +121,7 @@ export default function NovaAcaoPage() {
 
       const contentType = response.headers.get("content-type");
 
-      let resposta: any = null;
+      let resposta: unknown = null;
 
       if (contentType?.includes("application/json")) {
         resposta = await response.json();

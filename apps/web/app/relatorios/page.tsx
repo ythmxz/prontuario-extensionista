@@ -218,7 +218,7 @@ function MetricCard({
   value,
   growth,
   icon,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <div className={styles.card}>
 
@@ -256,7 +256,7 @@ function PerformanceItem({
   title,
   value,
   color,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <div
       style={{
@@ -304,7 +304,7 @@ function TableRow({
   consultas,
   pacientes,
   impacto,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <tr
       style={{

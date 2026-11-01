@@ -121,7 +121,7 @@ export default function Dashboard() {
   );
 }
 
-function Card({ title, value, growth, color, icon }: any) {
+function Card({ title, value, growth, color, icon }: Record<string, unknown>) {
   return (
     <div className={styles.card}>
       <div className={styles.cardTop}>

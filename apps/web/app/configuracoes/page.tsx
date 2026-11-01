@@ -233,7 +233,7 @@ export default function Configuracoes() {
 function ToggleItem({
   title,
   description,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <div
       style={{

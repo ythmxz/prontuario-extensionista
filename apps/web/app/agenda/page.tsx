@@ -186,7 +186,7 @@ function MiniCard({
   title,
   value,
   icon,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <div
       className={styles.card}
@@ -219,7 +219,7 @@ function Appointment({
   patient,
   type,
   status,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <div
       style={{

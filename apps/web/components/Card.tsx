@@ -1,4 +1,4 @@
-export default function Card({ title, value, color }: any) {
+export default function Card({ title, value, color }: Record<string, unknown>) {
   return (
     <div style={{
       background: "white",

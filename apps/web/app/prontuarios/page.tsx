@@ -192,7 +192,7 @@ function TopCard({
   value,
   icon,
   color,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <div className={styles.card}>
 
@@ -227,7 +227,7 @@ function RecordRow({
   date,
   category,
   status,
-}: any) {
+}: Record<string, unknown>) {
   return (
     <tr
       style={{

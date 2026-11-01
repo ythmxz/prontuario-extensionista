@@ -8,7 +8,7 @@ const API_URL =
   "http://localhost:3333";
 
 export default function AcoesPage() {
-  const [acoes, setAcoes] = useState<any[]>([]);
+  const [acoes, setAcoes] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
