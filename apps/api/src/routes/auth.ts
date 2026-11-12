@@ -1,12 +1,17 @@
 import { FastifyInstance } from "fastify";
 import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma.ts";
+import jwt from "@fastify/jwt";
 
 export async function authRoutes(app: FastifyInstance) {
+  await app.register(jwt, {
+    secret: "segredo-jwt-aleatorio-sla", // TODO: usar um segredo propriamente dito, externamente! algo tipo process.env.JWT_SECRET!
+  });
+
   app.post("/auth/login", async (request, reply) => {
     const body = request.body as {
-      email: string;
-      password: string;
+      email?: string;
+      password?: string;
     };
 
     const email = body.email?.trim();
@@ -27,21 +32,21 @@ export async function authRoutes(app: FastifyInstance) {
       },
     });
 
-    if (!user) {
-      return reply.status(401).send({ message: "Credenciais invalidas." });
-    }
+    const authFailReply = () => reply.status(401).send({ message: "Credenciais invalidas." });
 
-    if (!user.passwordHash) {
-      return reply.status(401).send({ message: "Credenciais invalidas." });
-    }
+    if (!user) return authFailReply();
+    if (!user.passwordHash) return authFailReply();
 
     const isValid = await bcrypt.compare(body.password, user.passwordHash);
-
-    if (!isValid) {
-      return reply.status(401).send({ message: "Credenciais invalidas." });
-    }
+    if (!isValid) return authFailReply();
 
     const { passwordHash, ...safeUser } = user;
-    return reply.status(200).send(safeUser);
+
+    const token = app.jwt.sign(
+      safeUser,
+      { sub: user.id, expiresIn: "1h" },
+    );
+
+    return reply.send({ token, user: safeUser });
   });
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,8 +9,15 @@ const initialFormState = {
   password: "",
 };
 
+type Status = "idle" | "loading" | "success" | "error";
+
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333"; // TODO: mover isso daqui para outro lugar mais geral (e lá em cadastro/page.tsx também)
+
 export default function LoginPage() {
   const [formData, setFormData] = useState(initialFormState);
+  const [status, setStatus] = useState<Status>("idle");
+  const [message, setMessage] = useState("");
+  const isLoading = status === "loading";
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -19,6 +26,47 @@ export default function LoginPage() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setMessage("");
+
+    if (!formData.email.trim() || !formData.password.trim()) {
+      setStatus("error");
+      setMessage("Preencha todos os campos obrigatorios.");
+      return;
+    }
+
+    setStatus("loading");
+
+    try {
+      const response = await fetch(`${apiBaseUrl}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email.trim(),
+          password: formData.password.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setStatus("error");
+        setMessage(data.message ?? "Nao foi possivel realizar o cadastro");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      setStatus("success");
+      setMessage("Entrou!");
+      console.log(data.token);
+    } catch (erro) {
+      console.log(erro);
+      setStatus("error");
+      setMessage("Nao foi possivel conectar ao servidor.");
+    }
   };
 
   return (
@@ -65,7 +113,7 @@ export default function LoginPage() {
 
           <h2>Entrar na sua conta</h2>
 
-          <form className="register-form">
+          <form className="register-form" onSubmit={handleSubmit}>
             <input
               type="email"
               name="email"
@@ -82,11 +130,17 @@ export default function LoginPage() {
               onChange={handleChange}
               required
             />
-          </form>
 
-          <Link href="/" className="signup-btn">
-            Entrar
-          </Link>
+            <button type="submit" className="signup-btn" disabled={isLoading}>
+              {isLoading ? "Entrando..." : "Entrar"}
+            </button>
+
+            {message ? (
+              <p className={`form-feedback ${status}`} aria-live="polite">
+                {message}
+              </p>
+            ) : null}
+          </form>
 
           <div className="divider">
             <span></span>

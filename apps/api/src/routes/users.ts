@@ -12,6 +12,7 @@ const userSelect = {
 };
 
 export async function usersRoutes(app: FastifyInstance) {
+  // FIXME: talvez remover essa rota. É insegura!!
   app.get("/users", async (request) => {
     const { name, email } = request.query as {
       name?: string;
