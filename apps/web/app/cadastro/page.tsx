@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { apiBaseUrl } from "../common";
 import Link from "next/link";
 import Image from "next/image";
-
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333";
 
 const initialFormState = {
   name: "",

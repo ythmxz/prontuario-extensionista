@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { apiBaseUrl } from "../common";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,8 +11,6 @@ const initialFormState = {
 };
 
 type Status = "idle" | "loading" | "success" | "error";
-
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333"; // TODO: mover isso daqui para outro lugar mais geral (e lá em cadastro/page.tsx também)
 
 export default function LoginPage() {
   const [formData, setFormData] = useState(initialFormState);
@@ -61,7 +60,6 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token);
       setStatus("success");
       setMessage("Entrou!");
-      console.log(data.token);
     } catch (erro) {
       console.log(erro);
       setStatus("error");
