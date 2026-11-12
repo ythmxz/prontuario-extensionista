@@ -1,10 +1,7 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
+import { API_URL } from "../common";
 
 type Participacao = {
   id: number;
@@ -116,10 +113,6 @@ function acaoAnterior(
     "CONCLUIDA"
   );
 }
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3333";
 
 export default function ParticipantesPage() {
   const [participantes, setParticipantes] =

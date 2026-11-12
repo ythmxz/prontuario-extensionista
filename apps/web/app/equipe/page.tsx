@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { API_URL } from "../common";
 
 type Membro = {
   id: number;
@@ -37,10 +38,6 @@ type EquipeAcao = {
   dataSaida?: string | null;
   horasDedicadas?: number | null;
 };
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3333";
 
 export default function EquipePage() {
   const [membros, setMembros] = useState<Membro[]>([]);

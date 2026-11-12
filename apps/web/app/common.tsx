@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333";
 
 export function isLoggedIn(): boolean {
   if (!localStorage.getItem("token")) return false;

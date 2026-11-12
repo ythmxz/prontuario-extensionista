@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
+import { API_URL } from "../common";
 
 type Pessoa = {
   id: number;
@@ -88,10 +89,6 @@ function formatarStatus(
       return status || "Não informado";
   }
 }
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3333";
 
 export default function MembrosPage() {
   const [membros, setMembros] = useState<Membro[]>([]);

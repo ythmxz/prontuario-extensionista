@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { API_URL } from "../common";
 
 type Documento = {
   id: number;
@@ -16,10 +17,6 @@ type Acao = {
   titulo: string;
   status: string;
 };
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3333";
 
 export default function DocumentosPage() {
   const [documentos, setDocumentos] =

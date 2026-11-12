@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "../common";
 
 type Pessoa = {
   id: number;
@@ -14,10 +15,6 @@ type Departamento = {
   id: number;
   nome: string;
 };
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3333";
 
 export default function NovoMembroPage() {
   const router = useRouter();

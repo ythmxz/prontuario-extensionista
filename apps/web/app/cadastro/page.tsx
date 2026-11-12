@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { apiBaseUrl } from "../common";
+import { API_URL } from "../common";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -56,7 +56,7 @@ export default function CadastroPage() {
     setStatus("loading");
 
     try {
-      const response = await fetch(`${apiBaseUrl}/users`, {
+      const response = await fetch(`${API_URL}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

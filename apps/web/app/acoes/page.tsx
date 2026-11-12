@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3333";
+import { API_URL } from "../common";
 
 export default function AcoesPage() {
   const [acoes, setAcoes] = useState<unknown[]>([]);

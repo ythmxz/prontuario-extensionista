@@ -3,16 +3,13 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "../common";
 
 type Acao = {
   id: number;
   titulo: string;
   status: string;
 };
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3333";
 
 export default function NovoDocumentoPage() {
   const router = useRouter();
