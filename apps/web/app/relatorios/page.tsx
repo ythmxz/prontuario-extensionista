@@ -2,6 +2,7 @@
 
 import Sidebar from "@/components/Sidebar";
 import styles from "../dashboard/dashboard.module.css";
+import { ReactNode } from 'react';
 
 import {
   TrendingUp,
@@ -213,12 +214,14 @@ export default function Relatorios() {
   );
 }
 
-function MetricCard({
-  title,
-  value,
-  growth,
-  icon,
-}: Record<string, unknown>) {
+type MetricCardProps = {
+  title: ReactNode,
+  value: ReactNode,
+  growth: ReactNode,
+  icon: ReactNode,
+};
+
+function MetricCard({ title, value, growth, icon }: MetricCardProps) {
   return (
     <div className={styles.card}>
 
@@ -252,11 +255,13 @@ function MetricCard({
   );
 }
 
-function PerformanceItem({
-  title,
-  value,
-  color,
-}: Record<string, unknown>) {
+type PerformanceItemProps = {
+  title: string,
+  value: string,
+  color: string,
+};
+
+function PerformanceItem({ title, value, color }: PerformanceItemProps) {
   return (
     <div
       style={{
@@ -299,12 +304,14 @@ function PerformanceItem({
   );
 }
 
-function TableRow({
-  month,
-  consultas,
-  pacientes,
-  impacto,
-}: Record<string, unknown>) {
+type TableRowProps = {
+  month: string,
+  consultas: string,
+  pacientes: string,
+  impacto: string,
+};
+
+function TableRow({ month, consultas, pacientes, impacto }: TableRowProps) {
   return (
     <tr
       style={{
