@@ -4,6 +4,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { apiBaseUrl } from "../common";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const initialFormState = {
   email: "",
@@ -13,6 +14,7 @@ const initialFormState = {
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState(initialFormState);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
@@ -26,6 +28,9 @@ export default function LoginPage() {
       [name]: value,
     }));
   };
+
+  const params = new URLSearchParams(window.location.search);
+  const returnTo = params.get("returnTo");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,6 +65,11 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token);
       setStatus("success");
       setMessage("Entrou!");
+
+      const destination = returnTo?.startsWith("/") && !returnTo.startsWith("//")
+        ? returnTo
+        : "/dashboard";
+      router.replace(destination);
     } catch (erro) {
       console.log(erro);
       setStatus("error");
@@ -110,6 +120,12 @@ export default function LoginPage() {
           </div>
 
           <h2>Entrar na sua conta</h2>
+
+          {returnTo ? (
+            <p className={`form-feedback ${status}`} aria-live="polite">
+              Por favor faça o login antes de acessar a página.
+            </p>
+          ) : null}
 
           <form className="register-form" onSubmit={handleSubmit}>
             <input
