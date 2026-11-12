@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import { API_URL } from "../common";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,8 +29,12 @@ export default function LoginPage() {
     }));
   };
 
-  const params = new URLSearchParams(window.location.search);
-  const returnTo = params.get("returnTo");
+  const [returnTo, setReturnTo] = useState<string | null>();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setReturnTo(params.get("returnTo"));
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
