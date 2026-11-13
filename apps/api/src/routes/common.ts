@@ -1,6 +1,5 @@
-import { FastifyInstance, FastifyReply } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { Prisma } from "../generated/prisma/client.ts";
-import type { FastifyReply, FastifyRequest } from "fastify";
 
 export type FieldType = "string" | "number";
 

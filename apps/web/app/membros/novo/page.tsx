@@ -110,14 +110,10 @@ export default function NovoMembroPage() {
           },
           body: JSON.stringify({
             pessoaId: Number(pessoaId),
-            departamentoId: departamentoId
-              ? Number(departamentoId)
-              : undefined,
+            departamentoId: departamentoId ? Number(departamentoId) : undefined,
             tipo,
-            matricula:
-              matricula.trim() || undefined,
-            vinculo:
-              vinculo.trim() || undefined,
+            matricula: matricula.trim() || undefined,
+            vinculo: vinculo.trim() || undefined,
           }),
         }
       );
