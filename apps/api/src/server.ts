@@ -1,4 +1,4 @@
-import Fastify from "fastify";
+import Fastify, { FastifyInstance } from "fastify";
 
 import cors from "@fastify/cors";
 
@@ -46,47 +46,32 @@ app.register(cors, {
   origin: true,
 });
 
-app.register(authRoutes);
+async function apiRoutes(instance: FastifyInstance) {
+  instance.register(authRoutes);
+  instance.register(cursosRoutes);
+  instance.register(usersRoutes);
+  instance.register(departmentsRoutes);
+  instance.register(colegiadosRoutes);
+  instance.register(professoresRoutes);
+  instance.register(nucleosRoutes);
+  instance.register(linhasAtuacaoRoutes);
+  instance.register(tiposAcaoRoutes);
+  instance.register(locaisAcaoRoutes);
+  instance.register(alunosRoutes);
+  instance.register(pessoasRoutes);
+  instance.register(participantesRoutes);
+  instance.register(membrosEquipeRoutes);
+  instance.register(acoesExtensionistasRoutes);
+  instance.register(documentosAcaoRoutes);
+  instance.register(associacoesAcaoRoutes);
+  instance.register(atendimentosRoutes);
+  instance.register(prontuariosRoutes);
+  instance.get("/health", async () => ({ status: "ok" }));
+}
 
-app.register(cursosRoutes);
-
-app.register(usersRoutes);
-
-app.register(departmentsRoutes);
-
-app.register(colegiadosRoutes);
-
-app.register(professoresRoutes);
-
-app.register(nucleosRoutes);
-
-app.register(linhasAtuacaoRoutes);
-
-app.register(tiposAcaoRoutes);
-
-app.register(locaisAcaoRoutes);
-app.register(alunosRoutes);
-app.register(pessoasRoutes);
-
-app.register(participantesRoutes);
-
-app.register(membrosEquipeRoutes);
-
-app.register(acoesExtensionistasRoutes);
-
-app.register(documentosAcaoRoutes);
-
-app.register(associacoesAcaoRoutes);
-
-app.register(atendimentosRoutes);
-
-app.register(prontuariosRoutes);
-
-app.get("/health", async () => {
-  return {
-    status: "ok",
-  };
-});
+// Suporta tanto requisições diretas quanto roteadas pelo Vercel sob /api
+app.register(apiRoutes);
+app.register(apiRoutes, { prefix: "/api" });
 
 const start = async () => {
   try {

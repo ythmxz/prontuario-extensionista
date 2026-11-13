@@ -2,7 +2,26 @@
 
 import { useRouter } from "next/navigation";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3333";
+function getApiUrl(): string {
+  // No servidor (SSR, Route Handlers), utiliza o binding de serviço injetado pela Vercel
+  if (typeof window === "undefined") {
+    return (
+      process.env.API_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:3333"
+    );
+  }
+
+  // Se houver URL explicitamente definida via variável pública
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  // No navegador (Client-side), utiliza o caminho público /api roteado pelo Vercel
+  return "/api";
+}
+
+export const API_URL = getApiUrl();
 
 export async function isLoggedIn(): Promise<boolean> {
   if (!localStorage.getItem("token")) return false;
