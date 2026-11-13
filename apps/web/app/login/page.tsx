@@ -167,10 +167,12 @@ export default function LoginPage() {
             <span></span>
           </div>
 
-          <button type="button" className="google-btn">
-            <Image width={48} height={48} src="/img/google.png" alt="Google" />
-            Continue com Google
-          </button>
+          {
+          // <button type="button" className="google-btn">
+          //   <Image width={48} height={48} src="/img/google.png" alt="Google" />
+          //   Continue com Google
+          // </button>
+          }
 
           <Link href="/cadastro" className="signup-btn">
             Cadastre-se

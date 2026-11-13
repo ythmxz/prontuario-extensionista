@@ -188,16 +188,18 @@ export default function CadastroPage() {
               {isLoading ? "Cadastrando..." : "Cadastrar"}
             </button>
 
-            <div className="divider">
-              <span></span>
-              <p>ou</p>
-              <span></span>
-            </div>
+            {
+            // <div className="divider">
+            //   <span></span>
+            //   <p>ou</p>
+            //   <span></span>
+            // </div>
 
-            <button type="button" className="google-btn">
-              <Image width={48} height={48} src="/img/google.png" alt="Google" />
-              Cadastrar com Google
-            </button>
+            // <button type="button" className="google-btn">
+            //   <Image width={48} height={48} src="/img/google.png" alt="Google" />
+            //   Cadastrar com Google
+            // </button>
+            }
 
             {message ? (
               <p className={`form-feedback ${status}`} aria-live="polite">
