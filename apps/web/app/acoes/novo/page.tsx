@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_URL } from "../../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 export default function NovaAcaoPage() {
   const router = useRouter();
@@ -163,509 +164,511 @@ export default function NovaAcaoPage() {
   }
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#f5f7fa",
-        padding: "2rem",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
+    <ProtectedArea>
+      <main
         style={{
-          maxWidth: "750px",
-          margin: "0 auto",
+          minHeight: "100vh",
+          background: "#f5f7fa",
+          padding: "2rem",
+          fontFamily: "Arial, sans-serif",
         }}
       >
-        {/* VOLTAR */}
-        <Link
-          href="/acoes"
-          style={{
-            color: "#0070f3",
-            textDecoration: "none",
-            fontWeight: "bold",
-          }}
-        >
-          ← Voltar para ações
-        </Link>
-
-        {/* CABEÇALHO */}
         <div
           style={{
-            marginTop: "1.5rem",
-            marginBottom: "2rem",
+            maxWidth: "750px",
+            margin: "0 auto",
           }}
         >
-          <h1
+          {/* VOLTAR */}
+          <Link
+            href="/acoes"
             style={{
-              margin: 0,
-              fontSize: "2rem",
-              color: "#222",
+              color: "#0070f3",
+              textDecoration: "none",
+              fontWeight: "bold",
             }}
           >
-            Cadastrar Nova Ação Extensionista
-          </h1>
+            ← Voltar para ações
+          </Link>
 
-          <p
+          {/* CABEÇALHO */}
+          <div
             style={{
-              color: "#666",
-              marginTop: "0.5rem",
+              marginTop: "1.5rem",
+              marginBottom: "2rem",
             }}
           >
-            Preencha os dados abaixo para cadastrar uma nova ação extensionista.
-          </p>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: "2rem",
+                color: "#222",
+              }}
+            >
+              Cadastrar Nova Ação Extensionista
+            </h1>
+
+            <p
+              style={{
+                color: "#666",
+                marginTop: "0.5rem",
+              }}
+            >
+              Preencha os dados abaixo para cadastrar uma nova ação extensionista.
+            </p>
+          </div>
+
+          {/* MENSAGEM DE ERRO */}
+          {erro && (
+            <div
+              style={{
+                marginBottom: "1.5rem",
+                padding: "1rem",
+                borderRadius: "6px",
+                border: "1px solid #f5c2c7",
+                background: "#f8d7da",
+                color: "#842029",
+              }}
+            >
+              <strong>Erro: </strong> {erro}
+            </div>
+          )}
+
+          {/* MENSAGEM DE SUCESSO */}
+          {sucesso && (
+            <div
+              style={{
+                marginBottom: "1.5rem",
+                padding: "1rem",
+                borderRadius: "6px",
+                border: "1px solid #badbcc",
+                background: "#d1e7dd",
+                color: "#0f5132",
+              }}
+            >
+              Ação cadastrada com sucesso! Redirecionando...
+            </div>
+          )}
+
+          {/* FORMULÁRIO */}
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              background: "#fff",
+              border: "1px solid #ddd",
+              borderRadius: "10px",
+              padding: "2rem",
+            }}
+          >
+            {/* TÍTULO */}
+            <div style={{ marginBottom: "1.25rem" }}>
+              <label
+                htmlFor="titulo"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: "bold",
+                }}
+              >
+                Título *
+              </label>
+
+              <input
+                id="titulo"
+                type="text"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                placeholder="Ex.: Programa de Reforço Escolar Comunitário"
+                required
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  padding: "0.75rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "6px",
+                }}
+              />
+            </div>
+
+            {/* DESCRIÇÃO */}
+            <div style={{ marginBottom: "1.25rem" }}>
+              <label
+                htmlFor="descricao"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: "bold",
+                }}
+              >
+                Descrição *
+              </label>
+
+              <textarea
+                id="descricao"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                placeholder="Descreva a ação extensionista"
+                rows={5}
+                required
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  padding: "0.75rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "6px",
+                  resize: "vertical",
+                }}
+              />
+            </div>
+
+            {/* TIPO / LOCAL */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "1rem",
+                marginBottom: "1.25rem",
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="tipoAcao"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Tipo de Ação *
+                </label>
+
+                <select
+                  id="tipoAcao"
+                  value={tipoAcaoId}
+                  onChange={(e) => setTipoAcaoId(e.target.value)}
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "6px",
+                    background: "#fff",
+                  }}
+                >
+                  <option value="">Selecione o tipo</option>
+                  <option value="1">Projeto</option>
+                  <option value="2">Curso</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="local"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Local *
+                </label>
+
+                <select
+                  id="local"
+                  value={localId}
+                  onChange={(e) => setLocalId(e.target.value)}
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "6px",
+                    background: "#fff",
+                  }}
+                >
+                  <option value="">Selecione o local</option>
+                  <option value="1">Campus Principal</option>
+                  <option value="2">Escola Municipal Comunitária</option>
+                </select>
+              </div>
+            </div>
+
+            {/* LINHA DE ATUAÇÃO */}
+            <div style={{ marginBottom: "1.25rem" }}>
+              <label
+                htmlFor="linhaAtuacao"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: "bold",
+                }}
+              >
+                Linha de Atuação *
+              </label>
+
+              <select
+                id="linhaAtuacao"
+                value={linhaAtuacaoId}
+                onChange={(e) => setLinhaAtuacaoId(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "6px",
+                  background: "#fff",
+                }}
+              >
+                <option value="">Selecione a linha de atuação</option>
+                <option value="1">Educação e Extensão Comunitária</option>
+              </select>
+            </div>
+
+            {/* DATAS */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "1rem",
+                marginBottom: "1.25rem",
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="dataInicio"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Data de Início *
+                </label>
+
+                <input
+                  id="dataInicio"
+                  type="date"
+                  value={dataInicio}
+                  onChange={(e) => setDataInicio(e.target.value)}
+                  required
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    padding: "0.75rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "6px",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="dataFim"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Data de Término
+                </label>
+
+                <input
+                  id="dataFim"
+                  type="date"
+                  value={dataFim}
+                  onChange={(e) => setDataFim(e.target.value)}
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    padding: "0.75rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "6px",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* CARGA HORÁRIA */}
+            <div style={{ marginBottom: "1.25rem" }}>
+              <label
+                htmlFor="cargaHoraria"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: "bold",
+                }}
+              >
+                Carga Horária *
+              </label>
+
+              <input
+                id="cargaHoraria"
+                type="number"
+                min="0"
+                step="0.5"
+                value={cargaHoraria}
+                onChange={(e) => setCargaHoraria(e.target.value)}
+                placeholder="Ex.: 40.5"
+                required
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  padding: "0.75rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "6px",
+                }}
+              />
+            </div>
+
+            {/* MODALIDADE / STATUS */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "1rem",
+                marginBottom: "1.25rem",
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="modalidade"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Modalidade *
+                </label>
+
+                <select
+                  id="modalidade"
+                  value={modalidade}
+                  onChange={(e) => setModalidade(e.target.value)}
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "6px",
+                    background: "#fff",
+                  }}
+                >
+                  <option value="">Selecione a modalidade</option>
+                  <option value="PRESENCIAL">Presencial</option>
+                  <option value="REMOTO">Remoto</option>
+                  <option value="HIBRIDO">Híbrido</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="status"
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Status *
+                </label>
+
+                <select
+                  id="status"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "6px",
+                    background: "#fff",
+                  }}
+                >
+                  <option value="">Selecione o status</option>
+                  <option value="PLANEJADA">Planejada</option>
+                  <option value="EM_ANDAMENTO">Em andamento</option>
+                  <option value="CONCLUIDA">Concluída</option>
+                  <option value="CANCELADA">Cancelada</option>
+                </select>
+              </div>
+            </div>
+
+            {/* PÚBLICO-ALVO */}
+            <div style={{ marginBottom: "1.5rem" }}>
+              <label
+                htmlFor="publicoAlvo"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: "bold",
+                }}
+              >
+                Público-alvo *
+              </label>
+
+              <input
+                id="publicoAlvo"
+                type="text"
+                value={publicoAlvo}
+                onChange={(e) => setPublicoAlvo(e.target.value)}
+                placeholder="Ex.: Crianças e Adolescentes"
+                required
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  padding: "0.75rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "6px",
+                }}
+              />
+            </div>
+
+            {/* BOTÕES */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "0.75rem",
+              }}
+            >
+              <Link
+                href="/acoes"
+                style={{
+                  display: "inline-block",
+                  padding: "0.75rem 1.25rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "6px",
+                  color: "#333",
+                  background: "#fff",
+                  textDecoration: "none",
+                  fontWeight: "bold",
+                }}
+              >
+                Cancelar
+              </Link>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  padding: "0.75rem 1.5rem",
+                  border: "none",
+                  borderRadius: "6px",
+                  background: loading ? "#8ab4f8" : "#0070f3",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+              >
+                {loading ? "Cadastrando..." : "Cadastrar Ação"}
+              </button>
+            </div>
+          </form>
         </div>
-
-        {/* MENSAGEM DE ERRO */}
-        {erro && (
-          <div
-            style={{
-              marginBottom: "1.5rem",
-              padding: "1rem",
-              borderRadius: "6px",
-              border: "1px solid #f5c2c7",
-              background: "#f8d7da",
-              color: "#842029",
-            }}
-          >
-            <strong>Erro: </strong> {erro}
-          </div>
-        )}
-
-        {/* MENSAGEM DE SUCESSO */}
-        {sucesso && (
-          <div
-            style={{
-              marginBottom: "1.5rem",
-              padding: "1rem",
-              borderRadius: "6px",
-              border: "1px solid #badbcc",
-              background: "#d1e7dd",
-              color: "#0f5132",
-            }}
-          >
-            Ação cadastrada com sucesso! Redirecionando...
-          </div>
-        )}
-
-        {/* FORMULÁRIO */}
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            background: "#fff",
-            border: "1px solid #ddd",
-            borderRadius: "10px",
-            padding: "2rem",
-          }}
-        >
-          {/* TÍTULO */}
-          <div style={{ marginBottom: "1.25rem" }}>
-            <label
-              htmlFor="titulo"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: "bold",
-              }}
-            >
-              Título *
-            </label>
-
-            <input
-              id="titulo"
-              type="text"
-              value={titulo}
-              onChange={(e) => setTitulo(e.target.value)}
-              placeholder="Ex.: Programa de Reforço Escolar Comunitário"
-              required
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "0.75rem",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-              }}
-            />
-          </div>
-
-          {/* DESCRIÇÃO */}
-          <div style={{ marginBottom: "1.25rem" }}>
-            <label
-              htmlFor="descricao"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: "bold",
-              }}
-            >
-              Descrição *
-            </label>
-
-            <textarea
-              id="descricao"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              placeholder="Descreva a ação extensionista"
-              rows={5}
-              required
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "0.75rem",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                resize: "vertical",
-              }}
-            />
-          </div>
-
-          {/* TIPO / LOCAL */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              marginBottom: "1.25rem",
-            }}
-          >
-            <div>
-              <label
-                htmlFor="tipoAcao"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "bold",
-                }}
-              >
-                Tipo de Ação *
-              </label>
-
-              <select
-                id="tipoAcao"
-                value={tipoAcaoId}
-                onChange={(e) => setTipoAcaoId(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                  background: "#fff",
-                }}
-              >
-                <option value="">Selecione o tipo</option>
-                <option value="1">Projeto</option>
-                <option value="2">Curso</option>
-              </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="local"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "bold",
-                }}
-              >
-                Local *
-              </label>
-
-              <select
-                id="local"
-                value={localId}
-                onChange={(e) => setLocalId(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                  background: "#fff",
-                }}
-              >
-                <option value="">Selecione o local</option>
-                <option value="1">Campus Principal</option>
-                <option value="2">Escola Municipal Comunitária</option>
-              </select>
-            </div>
-          </div>
-
-          {/* LINHA DE ATUAÇÃO */}
-          <div style={{ marginBottom: "1.25rem" }}>
-            <label
-              htmlFor="linhaAtuacao"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: "bold",
-              }}
-            >
-              Linha de Atuação *
-            </label>
-
-            <select
-              id="linhaAtuacao"
-              value={linhaAtuacaoId}
-              onChange={(e) => setLinhaAtuacaoId(e.target.value)}
-              required
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                background: "#fff",
-              }}
-            >
-              <option value="">Selecione a linha de atuação</option>
-              <option value="1">Educação e Extensão Comunitária</option>
-            </select>
-          </div>
-
-          {/* DATAS */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              marginBottom: "1.25rem",
-            }}
-          >
-            <div>
-              <label
-                htmlFor="dataInicio"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "bold",
-                }}
-              >
-                Data de Início *
-              </label>
-
-              <input
-                id="dataInicio"
-                type="date"
-                value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "0.75rem",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                }}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="dataFim"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "bold",
-                }}
-              >
-                Data de Término
-              </label>
-
-              <input
-                id="dataFim"
-                type="date"
-                value={dataFim}
-                onChange={(e) => setDataFim(e.target.value)}
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "0.75rem",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                }}
-              />
-            </div>
-          </div>
-
-          {/* CARGA HORÁRIA */}
-          <div style={{ marginBottom: "1.25rem" }}>
-            <label
-              htmlFor="cargaHoraria"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: "bold",
-              }}
-            >
-              Carga Horária *
-            </label>
-
-            <input
-              id="cargaHoraria"
-              type="number"
-              min="0"
-              step="0.5"
-              value={cargaHoraria}
-              onChange={(e) => setCargaHoraria(e.target.value)}
-              placeholder="Ex.: 40.5"
-              required
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "0.75rem",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-              }}
-            />
-          </div>
-
-          {/* MODALIDADE / STATUS */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              marginBottom: "1.25rem",
-            }}
-          >
-            <div>
-              <label
-                htmlFor="modalidade"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "bold",
-                }}
-              >
-                Modalidade *
-              </label>
-
-              <select
-                id="modalidade"
-                value={modalidade}
-                onChange={(e) => setModalidade(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                  background: "#fff",
-                }}
-              >
-                <option value="">Selecione a modalidade</option>
-                <option value="PRESENCIAL">Presencial</option>
-                <option value="REMOTO">Remoto</option>
-                <option value="HIBRIDO">Híbrido</option>
-              </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="status"
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "bold",
-                }}
-              >
-                Status *
-              </label>
-
-              <select
-                id="status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                  background: "#fff",
-                }}
-              >
-                <option value="">Selecione o status</option>
-                <option value="PLANEJADA">Planejada</option>
-                <option value="EM_ANDAMENTO">Em andamento</option>
-                <option value="CONCLUIDA">Concluída</option>
-                <option value="CANCELADA">Cancelada</option>
-              </select>
-            </div>
-          </div>
-
-          {/* PÚBLICO-ALVO */}
-          <div style={{ marginBottom: "1.5rem" }}>
-            <label
-              htmlFor="publicoAlvo"
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                fontWeight: "bold",
-              }}
-            >
-              Público-alvo *
-            </label>
-
-            <input
-              id="publicoAlvo"
-              type="text"
-              value={publicoAlvo}
-              onChange={(e) => setPublicoAlvo(e.target.value)}
-              placeholder="Ex.: Crianças e Adolescentes"
-              required
-              style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "0.75rem",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-              }}
-            />
-          </div>
-
-          {/* BOTÕES */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "0.75rem",
-            }}
-          >
-            <Link
-              href="/acoes"
-              style={{
-                display: "inline-block",
-                padding: "0.75rem 1.25rem",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                color: "#333",
-                background: "#fff",
-                textDecoration: "none",
-                fontWeight: "bold",
-              }}
-            >
-              Cancelar
-            </Link>
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                padding: "0.75rem 1.5rem",
-                border: "none",
-                borderRadius: "6px",
-                background: loading ? "#8ab4f8" : "#0070f3",
-                color: "#fff",
-                fontWeight: "bold",
-                cursor: loading ? "not-allowed" : "pointer",
-              }}
-            >
-              {loading ? "Cadastrando..." : "Cadastrar Ação"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </main>
+      </main>
+    </ProtectedArea>
   );
 }

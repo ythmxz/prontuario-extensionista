@@ -2,7 +2,6 @@ import Link from "next/link";
 
 const paginas = [
   { nome: "Agenda", rota: "/agenda" },
-  { nome: "Configurações", rota: "/configuracoes" },
   { nome: "Ações", rota: "/acoes" },
   { nome: "Nova Ação", rota: "/acoes/novo" },
   { nome: "Membros", rota: "/membros" },

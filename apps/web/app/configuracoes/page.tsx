@@ -2,6 +2,7 @@
 
 import Sidebar from "@/components/Sidebar";
 import styles from "../dashboard/dashboard.module.css";
+import ProtectedArea from "@/components/ProtectedArea";
 
 import {
   User,
@@ -13,220 +14,222 @@ import {
 
 export default function Configuracoes() {
   return (
-    <div className={styles.container}>
+    <ProtectedArea>
+      <div className={styles.container}>
 
-      <Sidebar />
+        <Sidebar />
 
-      <main className={styles.main}>
+        <main className={styles.main}>
 
-        {/* HEADER */}
-        <div className={styles.header}>
-          <h1>Configurações</h1>
-          <p>Gerencie preferências e segurança</p>
-        </div>
+          {/* HEADER */}
+          <div className={styles.header}>
+            <h1>Configurações</h1>
+            <p>Gerencie preferências e segurança</p>
+          </div>
 
-        {/* GRID */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 20,
-            marginTop: 20,
-          }}
-        >
+          {/* GRID */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 20,
+              marginTop: 20,
+            }}
+          >
 
-          {/* PERFIL */}
-          <div className={styles.box}>
+            {/* PERFIL */}
+            <div className={styles.box}>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 25,
-              }}
-            >
-              <User size={20} />
-              <h3>Perfil</h3>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginBottom: 25,
+                }}
+              >
+                <User size={20} />
+                <h3>Perfil</h3>
+              </div>
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={label}>
+                  Nome
+                </label>
+
+                <input
+                  defaultValue="João Silva"
+                  style={input}
+                />
+              </div>
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={label}>
+                  Email
+                </label>
+
+                <input
+                  defaultValue="joao@email.com"
+                  style={input}
+                />
+              </div>
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={label}>
+                  Cargo
+                </label>
+
+                <input
+                  defaultValue="Administrador"
+                  style={input}
+                />
+              </div>
+
+              <button style={buttonPrimary}>
+                <Save size={18} />
+                Salvar Alterações
+              </button>
+
             </div>
 
-            <div style={{ marginBottom: 18 }}>
-              <label style={label}>
-                Nome
-              </label>
+            {/* SEGURANÇA */}
+            <div className={styles.box}>
 
-              <input
-                defaultValue="João Silva"
-                style={input}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginBottom: 25,
+                }}
+              >
+                <Shield size={20} />
+                <h3>Segurança</h3>
+              </div>
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={label}>
+                  Senha Atual
+                </label>
+
+                <input
+                  type="password"
+                  placeholder="********"
+                  style={input}
+                />
+              </div>
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={label}>
+                  Nova Senha
+                </label>
+
+                <input
+                  type="password"
+                  placeholder="********"
+                  style={input}
+                />
+              </div>
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={label}>
+                  Confirmar Senha
+                </label>
+
+                <input
+                  type="password"
+                  placeholder="********"
+                  style={input}
+                />
+              </div>
+
+              <button style={buttonPrimary}>
+                Alterar Senha
+              </button>
+
             </div>
-
-            <div style={{ marginBottom: 18 }}>
-              <label style={label}>
-                Email
-              </label>
-
-              <input
-                defaultValue="joao@email.com"
-                style={input}
-              />
-            </div>
-
-            <div style={{ marginBottom: 18 }}>
-              <label style={label}>
-                Cargo
-              </label>
-
-              <input
-                defaultValue="Administrador"
-                style={input}
-              />
-            </div>
-
-            <button style={buttonPrimary}>
-              <Save size={18} />
-              Salvar Alterações
-            </button>
 
           </div>
 
-          {/* SEGURANÇA */}
-          <div className={styles.box}>
+          {/* PREFERÊNCIAS */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 20,
+              marginTop: 20,
+            }}
+          >
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 25,
-              }}
-            >
-              <Shield size={20} />
-              <h3>Segurança</h3>
-            </div>
+            {/* NOTIFICAÇÕES */}
+            <div className={styles.box}>
 
-            <div style={{ marginBottom: 18 }}>
-              <label style={label}>
-                Senha Atual
-              </label>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginBottom: 25,
+                }}
+              >
+                <Bell size={20} />
+                <h3>Notificações</h3>
+              </div>
 
-              <input
-                type="password"
-                placeholder="********"
-                style={input}
+              <ToggleItem
+                title="Receber notificações"
+                description="Atualizações do sistema"
               />
-            </div>
 
-            <div style={{ marginBottom: 18 }}>
-              <label style={label}>
-                Nova Senha
-              </label>
-
-              <input
-                type="password"
-                placeholder="********"
-                style={input}
+              <ToggleItem
+                title="Alertas de consultas"
+                description="Avisos automáticos"
               />
-            </div>
 
-            <div style={{ marginBottom: 18 }}>
-              <label style={label}>
-                Confirmar Senha
-              </label>
-
-              <input
-                type="password"
-                placeholder="********"
-                style={input}
+              <ToggleItem
+                title="Emails administrativos"
+                description="Relatórios e desempenho"
               />
+
             </div>
 
-            <button style={buttonPrimary}>
-              Alterar Senha
-            </button>
+            {/* APARÊNCIA */}
+            <div className={styles.box}>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginBottom: 25,
+                }}
+              >
+                <Moon size={20} />
+                <h3>Aparência</h3>
+              </div>
+
+              <ToggleItem
+                title="Modo Escuro"
+                description="Ativar tema dark"
+              />
+
+              <ToggleItem
+                title="Animações"
+                description="Ativar transições"
+              />
+
+              <ToggleItem
+                title="Compactar Layout"
+                description="Reduzir espaçamentos"
+              />
+
+            </div>
 
           </div>
 
-        </div>
-
-        {/* PREFERÊNCIAS */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 20,
-            marginTop: 20,
-          }}
-        >
-
-          {/* NOTIFICAÇÕES */}
-          <div className={styles.box}>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 25,
-              }}
-            >
-              <Bell size={20} />
-              <h3>Notificações</h3>
-            </div>
-
-            <ToggleItem
-              title="Receber notificações"
-              description="Atualizações do sistema"
-            />
-
-            <ToggleItem
-              title="Alertas de consultas"
-              description="Avisos automáticos"
-            />
-
-            <ToggleItem
-              title="Emails administrativos"
-              description="Relatórios e desempenho"
-            />
-
-          </div>
-
-          {/* APARÊNCIA */}
-          <div className={styles.box}>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 25,
-              }}
-            >
-              <Moon size={20} />
-              <h3>Aparência</h3>
-            </div>
-
-            <ToggleItem
-              title="Modo Escuro"
-              description="Ativar tema dark"
-            />
-
-            <ToggleItem
-              title="Animações"
-              description="Ativar transições"
-            />
-
-            <ToggleItem
-              title="Compactar Layout"
-              description="Reduzir espaçamentos"
-            />
-
-          </div>
-
-        </div>
-
-      </main>
-    </div>
+        </main>
+      </div>
+    </ProtectedArea>
   );
 }
 

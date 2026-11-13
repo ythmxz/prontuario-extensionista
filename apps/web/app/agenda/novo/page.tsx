@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import styles from "../../dashboard/dashboard.module.css";
 import { API_URL } from "../../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 type PacienteOpcao = {
   id: number;
@@ -218,247 +219,249 @@ export default function NovoAtendimentoPage() {
   }
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
+    <ProtectedArea>
+      <div className={styles.container}>
+        <Sidebar />
 
-      <main className={styles.main}>
-        <Link
-          href="/agenda"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            color: "#2563eb",
-            textDecoration: "none",
-            fontWeight: 600,
-            fontSize: 14,
-          }}
-        >
-          <ArrowLeft size={16} />
-          Voltar para agenda
-        </Link>
-
-        <div className={styles.header} style={{ marginTop: 16 }}>
-          <h1>Novo Atendimento</h1>
-          <p>Preencha os dados abaixo para registrar um novo atendimento.</p>
-        </div>
-
-        {erro && (
-          <div
+        <main className={styles.main}>
+          <Link
+            href="/agenda"
             style={{
-              marginTop: 20,
-              padding: 14,
-              borderRadius: 12,
-              background: "#fee2e2",
-              color: "#dc2626",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              color: "#2563eb",
+              textDecoration: "none",
+              fontWeight: 600,
               fontSize: 14,
             }}
           >
-            <strong>Erro: </strong>
-            {erro}
-          </div>
-        )}
+            <ArrowLeft size={16} />
+            Voltar para agenda
+          </Link>
 
-        {sucesso && (
-          <div
-            style={{
-              marginTop: 20,
-              padding: 14,
-              borderRadius: 12,
-              background: "#dcfce7",
-              color: "#16a34a",
-              fontSize: 14,
-            }}
-          >
-            Atendimento cadastrado com sucesso! Redirecionando...
-          </div>
-        )}
-
-        <form
-          onSubmit={handleSubmit}
-          className={styles.box}
-          style={{ marginTop: 20, maxWidth: 800 }}
-        >
-          <div style={grid}>
-            <Campo label="Paciente *" htmlFor="paciente">
-              <select
-                id="paciente"
-                value={participanteId}
-                onChange={(e) => setParticipanteId(e.target.value)}
-                disabled={carregando}
-                required
-                style={inputStyle}
-              >
-                <option value="">
-                  {carregando ? "Carregando..." : "Selecione o paciente"}
-                </option>
-                {pacientes.map((paciente) => (
-                  <option key={paciente.id} value={paciente.id}>
-                    {paciente.pessoa.nome} — {paciente.pessoa.cpf}
-                  </option>
-                ))}
-              </select>
-            </Campo>
-
-            <Campo label="Ação *" htmlFor="acao">
-              <select
-                id="acao"
-                value={acaoId}
-                onChange={(e) => setAcaoId(e.target.value)}
-                disabled={carregando}
-                required
-                style={inputStyle}
-              >
-                <option value="">
-                  {carregando ? "Carregando..." : "Selecione a ação"}
-                </option>
-                {acoes.map((acao) => (
-                  <option key={acao.id} value={acao.id}>
-                    {acao.titulo}
-                  </option>
-                ))}
-              </select>
-            </Campo>
+          <div className={styles.header} style={{ marginTop: 16 }}>
+            <h1>Novo Atendimento</h1>
+            <p>Preencha os dados abaixo para registrar um novo atendimento.</p>
           </div>
 
-          <div style={grid}>
-            <Campo label="Profissional *" htmlFor="profissional">
-              <select
-                id="profissional"
-                value={profissionalId}
-                onChange={(e) => setProfissionalId(e.target.value)}
-                disabled={carregando}
-                required
-                style={inputStyle}
-              >
-                <option value="">
-                  {carregando ? "Carregando..." : "Selecione o profissional"}
-                </option>
-                {profissionais.map((profissional) => (
-                  <option key={profissional.id} value={profissional.id}>
-                    {profissional.nome}
-                  </option>
-                ))}
-              </select>
-            </Campo>
-
-            <Campo label="Tipo de atendimento *" htmlFor="tipoAtendimento">
-              <select
-                id="tipoAtendimento"
-                value={tipoAtendimento}
-                onChange={(e) => setTipoAtendimento(e.target.value)}
-                required
-                style={inputStyle}
-              >
-                <option value="">Selecione o tipo</option>
-                <option value="CONSULTA">Consulta</option>
-                <option value="TRIAGEM">Triagem</option>
-                <option value="ORIENTACAO">Orientação</option>
-                <option value="ACOMPANHAMENTO">Acompanhamento</option>
-                <option value="OUTRO">Outro</option>
-              </select>
-            </Campo>
-          </div>
-
-          <div style={grid}>
-            <Campo label="Data e hora *" htmlFor="dataAtendimento">
-              <input
-                id="dataAtendimento"
-                type="datetime-local"
-                value={dataAtendimento}
-                onChange={(e) => setDataAtendimento(e.target.value)}
-                required
-                style={inputStyle}
-              />
-            </Campo>
-
-            <Campo label="Retorno previsto" htmlFor="retornoPrevisto">
-              <input
-                id="retornoPrevisto"
-                type="date"
-                value={retornoPrevisto}
-                onChange={(e) => setRetornoPrevisto(e.target.value)}
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
-
-          <div style={{ marginBottom: 18 }}>
-            <Campo label="Motivo da consulta *" htmlFor="motivoConsulta">
-              <textarea
-                id="motivoConsulta"
-                value={motivoConsulta}
-                onChange={(e) => setMotivoConsulta(e.target.value)}
-                rows={3}
-                required
-                style={{ ...inputStyle, resize: "vertical" }}
-              />
-            </Campo>
-          </div>
-
-          <div style={{ marginBottom: 18 }}>
-            <Campo label="Hipótese diagnóstica" htmlFor="hipoteseDiagnostica">
-              <textarea
-                id="hipoteseDiagnostica"
-                value={hipoteseDiagnostica}
-                onChange={(e) => setHipoteseDiagnostica(e.target.value)}
-                rows={3}
-                style={{ ...inputStyle, resize: "vertical" }}
-              />
-            </Campo>
-          </div>
-
-          <div style={{ marginBottom: 24 }}>
-            <Campo label="Conduta" htmlFor="conduta">
-              <textarea
-                id="conduta"
-                value={conduta}
-                onChange={(e) => setConduta(e.target.value)}
-                rows={3}
-                style={{ ...inputStyle, resize: "vertical" }}
-              />
-            </Campo>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 12,
-            }}
-          >
-            <Link
-              href="/agenda"
+          {erro && (
+            <div
               style={{
-                padding: "12px 18px",
-                borderRadius: 14,
-                background: "#eff6ff",
-                color: "#2563eb",
-                textDecoration: "none",
-                fontWeight: 600,
+                marginTop: 20,
+                padding: 14,
+                borderRadius: 12,
+                background: "#fee2e2",
+                color: "#dc2626",
+                fontSize: 14,
               }}
             >
-              Cancelar
-            </Link>
+              <strong>Erro: </strong>
+              {erro}
+            </div>
+          )}
 
-            <button
-              type="submit"
-              disabled={loading || carregando}
+          {sucesso && (
+            <div
               style={{
-                background: loading ? "#93c5fd" : "#2563eb",
-                color: "white",
-                border: "none",
-                borderRadius: 14,
-                padding: "12px 18px",
-                fontWeight: 600,
-                cursor: loading ? "not-allowed" : "pointer",
+                marginTop: 20,
+                padding: 14,
+                borderRadius: 12,
+                background: "#dcfce7",
+                color: "#16a34a",
+                fontSize: 14,
               }}
             >
-              {loading ? "Cadastrando..." : "Cadastrar Atendimento"}
-            </button>
-          </div>
-        </form>
-      </main>
-    </div>
+              Atendimento cadastrado com sucesso! Redirecionando...
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit}
+            className={styles.box}
+            style={{ marginTop: 20, maxWidth: 800 }}
+          >
+            <div style={grid}>
+              <Campo label="Paciente *" htmlFor="paciente">
+                <select
+                  id="paciente"
+                  value={participanteId}
+                  onChange={(e) => setParticipanteId(e.target.value)}
+                  disabled={carregando}
+                  required
+                  style={inputStyle}
+                >
+                  <option value="">
+                    {carregando ? "Carregando..." : "Selecione o paciente"}
+                  </option>
+                  {pacientes.map((paciente) => (
+                    <option key={paciente.id} value={paciente.id}>
+                      {paciente.pessoa.nome} — {paciente.pessoa.cpf}
+                    </option>
+                  ))}
+                </select>
+              </Campo>
+
+              <Campo label="Ação *" htmlFor="acao">
+                <select
+                  id="acao"
+                  value={acaoId}
+                  onChange={(e) => setAcaoId(e.target.value)}
+                  disabled={carregando}
+                  required
+                  style={inputStyle}
+                >
+                  <option value="">
+                    {carregando ? "Carregando..." : "Selecione a ação"}
+                  </option>
+                  {acoes.map((acao) => (
+                    <option key={acao.id} value={acao.id}>
+                      {acao.titulo}
+                    </option>
+                  ))}
+                </select>
+              </Campo>
+            </div>
+
+            <div style={grid}>
+              <Campo label="Profissional *" htmlFor="profissional">
+                <select
+                  id="profissional"
+                  value={profissionalId}
+                  onChange={(e) => setProfissionalId(e.target.value)}
+                  disabled={carregando}
+                  required
+                  style={inputStyle}
+                >
+                  <option value="">
+                    {carregando ? "Carregando..." : "Selecione o profissional"}
+                  </option>
+                  {profissionais.map((profissional) => (
+                    <option key={profissional.id} value={profissional.id}>
+                      {profissional.nome}
+                    </option>
+                  ))}
+                </select>
+              </Campo>
+
+              <Campo label="Tipo de atendimento *" htmlFor="tipoAtendimento">
+                <select
+                  id="tipoAtendimento"
+                  value={tipoAtendimento}
+                  onChange={(e) => setTipoAtendimento(e.target.value)}
+                  required
+                  style={inputStyle}
+                >
+                  <option value="">Selecione o tipo</option>
+                  <option value="CONSULTA">Consulta</option>
+                  <option value="TRIAGEM">Triagem</option>
+                  <option value="ORIENTACAO">Orientação</option>
+                  <option value="ACOMPANHAMENTO">Acompanhamento</option>
+                  <option value="OUTRO">Outro</option>
+                </select>
+              </Campo>
+            </div>
+
+            <div style={grid}>
+              <Campo label="Data e hora *" htmlFor="dataAtendimento">
+                <input
+                  id="dataAtendimento"
+                  type="datetime-local"
+                  value={dataAtendimento}
+                  onChange={(e) => setDataAtendimento(e.target.value)}
+                  required
+                  style={inputStyle}
+                />
+              </Campo>
+
+              <Campo label="Retorno previsto" htmlFor="retornoPrevisto">
+                <input
+                  id="retornoPrevisto"
+                  type="date"
+                  value={retornoPrevisto}
+                  onChange={(e) => setRetornoPrevisto(e.target.value)}
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <Campo label="Motivo da consulta *" htmlFor="motivoConsulta">
+                <textarea
+                  id="motivoConsulta"
+                  value={motivoConsulta}
+                  onChange={(e) => setMotivoConsulta(e.target.value)}
+                  rows={3}
+                  required
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </Campo>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <Campo label="Hipótese diagnóstica" htmlFor="hipoteseDiagnostica">
+                <textarea
+                  id="hipoteseDiagnostica"
+                  value={hipoteseDiagnostica}
+                  onChange={(e) => setHipoteseDiagnostica(e.target.value)}
+                  rows={3}
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </Campo>
+            </div>
+
+            <div style={{ marginBottom: 24 }}>
+              <Campo label="Conduta" htmlFor="conduta">
+                <textarea
+                  id="conduta"
+                  value={conduta}
+                  onChange={(e) => setConduta(e.target.value)}
+                  rows={3}
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </Campo>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 12,
+              }}
+            >
+              <Link
+                href="/agenda"
+                style={{
+                  padding: "12px 18px",
+                  borderRadius: 14,
+                  background: "#eff6ff",
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                }}
+              >
+                Cancelar
+              </Link>
+
+              <button
+                type="submit"
+                disabled={loading || carregando}
+                style={{
+                  background: loading ? "#93c5fd" : "#2563eb",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 14,
+                  padding: "12px 18px",
+                  fontWeight: 600,
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+              >
+                {loading ? "Cadastrando..." : "Cadastrar Atendimento"}
+              </button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </ProtectedArea>
   );
 }

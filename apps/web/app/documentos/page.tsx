@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { API_URL } from "../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 type Documento = {
   id: number;
@@ -78,338 +79,340 @@ export default function DocumentosPage() {
   }, [acoes]);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "2rem",
-        maxWidth: "1200px",
-        margin: "0 auto",
-        fontFamily: "Arial, sans-serif",
-        background: "#fff",
-      }}
-    >
-      <div
+    <ProtectedArea>
+      <main
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "1rem",
-          flexWrap: "wrap",
+          minHeight: "100vh",
+          padding: "2rem",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          fontFamily: "Arial, sans-serif",
+          background: "#fff",
         }}
       >
-        <div>
-          <h1
-            style={{
-              margin: 0,
-              color: "#222",
-            }}
-          >
-            Documentos
-          </h1>
-
-          <p
-            style={{
-              marginTop: "0.5rem",
-              color: "#666",
-            }}
-          >
-            Documentos associados às ações
-            extensionistas.
-          </p>
-        </div>
-
-        <Link
-          href="/documentos/novo"
-          style={{
-            padding: "0.75rem 1rem",
-            borderRadius: "6px",
-            background: "#0070f3",
-            color: "#fff",
-            textDecoration: "none",
-            fontWeight: "bold",
-          }}
-        >
-          Novo documento
-        </Link>
-      </div>
-
-      {erro && (
         <div
           style={{
-            marginTop: "1.5rem",
-            padding: "1rem",
-            borderRadius: "6px",
-            background: "#ffe5e5",
-            color: "#b00020",
-            border: "1px solid #ffb3b3",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1rem",
+            flexWrap: "wrap",
           }}
         >
-          {erro}
-        </div>
-      )}
-
-      {carregando ? (
-        <p
-          style={{
-            marginTop: "2rem",
-            color: "#666",
-          }}
-        >
-          Carregando documentos...
-        </p>
-      ) : (
-        <>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: "1rem",
-              marginTop: "2rem",
-            }}
-          >
-            <div
+          <div>
+            <h1
               style={{
-                padding: "1.25rem",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                background: "#f8f8f8",
-              }}
-            >
-              <strong
-                style={{
-                  display: "block",
-                  fontSize: "1.8rem",
-                }}
-              >
-                {documentos.length}
-              </strong>
-
-              <span
-                style={{
-                  color: "#666",
-                }}
-              >
-                Documentos
-              </span>
-            </div>
-
-            <div
-              style={{
-                padding: "1.25rem",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                background: "#f8f8f8",
-              }}
-            >
-              <strong
-                style={{
-                  display: "block",
-                  fontSize: "1.8rem",
-                }}
-              >
-                {acoes.length}
-              </strong>
-
-              <span
-                style={{
-                  color: "#666",
-                }}
-              >
-                Ações extensionistas
-              </span>
-            </div>
-          </div>
-
-          <section
-            style={{
-              marginTop: "2rem",
-            }}
-          >
-            <h2
-              style={{
-                marginBottom: "1rem",
+                margin: 0,
                 color: "#222",
               }}
             >
-              Documentos cadastrados
-            </h2>
+              Documentos
+            </h1>
 
-            {documentos.length === 0 ? (
+            <p
+              style={{
+                marginTop: "0.5rem",
+                color: "#666",
+              }}
+            >
+              Documentos associados às ações
+              extensionistas.
+            </p>
+          </div>
+
+          <Link
+            href="/documentos/novo"
+            style={{
+              padding: "0.75rem 1rem",
+              borderRadius: "6px",
+              background: "#0070f3",
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Novo documento
+          </Link>
+        </div>
+
+        {erro && (
+          <div
+            style={{
+              marginTop: "1.5rem",
+              padding: "1rem",
+              borderRadius: "6px",
+              background: "#ffe5e5",
+              color: "#b00020",
+              border: "1px solid #ffb3b3",
+            }}
+          >
+            {erro}
+          </div>
+        )}
+
+        {carregando ? (
+          <p
+            style={{
+              marginTop: "2rem",
+              color: "#666",
+            }}
+          >
+            Carregando documentos...
+          </p>
+        ) : (
+          <>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "1rem",
+                marginTop: "2rem",
+              }}
+            >
               <div
                 style={{
-                  padding: "1.5rem",
+                  padding: "1.25rem",
                   border: "1px solid #ddd",
                   borderRadius: "8px",
-                  color: "#666",
+                  background: "#f8f8f8",
                 }}
               >
-                Nenhum documento cadastrado.
-              </div>
-            ) : (
-              <div
-                style={{
-                  overflowX: "auto",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                }}
-              >
-                <table
+                <strong
                   style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    minWidth: "900px",
+                    display: "block",
+                    fontSize: "1.8rem",
                   }}
                 >
-                  <thead>
-                    <tr
-                      style={{
-                        background: "#f5f5f5",
-                      }}
-                    >
-                      <th
-                        style={{
-                          padding: "0.9rem",
-                          textAlign: "left",
-                          borderBottom:
-                            "1px solid #ddd",
-                        }}
-                      >
-                        Título
-                      </th>
+                  {documentos.length}
+                </strong>
 
-                      <th
-                        style={{
-                          padding: "0.9rem",
-                          textAlign: "left",
-                          borderBottom:
-                            "1px solid #ddd",
-                        }}
-                      >
-                        Tipo
-                      </th>
-
-                      <th
-                        style={{
-                          padding: "0.9rem",
-                          textAlign: "left",
-                          borderBottom:
-                            "1px solid #ddd",
-                        }}
-                      >
-                        Ação
-                      </th>
-
-                      <th
-                        style={{
-                          padding: "0.9rem",
-                          textAlign: "left",
-                          borderBottom:
-                            "1px solid #ddd",
-                        }}
-                      >
-                        Status
-                      </th>
-
-                      <th
-                        style={{
-                          padding: "0.9rem",
-                          textAlign: "left",
-                          borderBottom:
-                            "1px solid #ddd",
-                        }}
-                      >
-                        Arquivo
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {documentos.map((documento) => {
-                      const acao = acaoPorId.get(
-                        documento.acaoId
-                      );
-
-                      return (
-                        <tr key={documento.id}>
-                          <td
-                            style={{
-                              padding: "0.9rem",
-                              borderBottom:
-                                "1px solid #eee",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {documento.titulo}
-                          </td>
-
-                          <td
-                            style={{
-                              padding: "0.9rem",
-                              borderBottom:
-                                "1px solid #eee",
-                            }}
-                          >
-                            {documento.tipo}
-                          </td>
-
-                          <td
-                            style={{
-                              padding: "0.9rem",
-                              borderBottom:
-                                "1px solid #eee",
-                            }}
-                          >
-                            {acao?.titulo ||
-                              `Ação #${documento.acaoId}`}
-                          </td>
-
-                          <td
-                            style={{
-                              padding: "0.9rem",
-                              borderBottom:
-                                "1px solid #eee",
-                            }}
-                          >
-                            {acao?.status || "-"}
-                          </td>
-
-                          <td
-                            style={{
-                              padding: "0.9rem",
-                              borderBottom:
-                                "1px solid #eee",
-                            }}
-                          >
-                            {documento.arquivoUrl ? (
-                              <a
-                                href={
-                                  documento.arquivoUrl
-                                }
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                  color: "#0070f3",
-                                  textDecoration:
-                                    "none",
-                                }}
-                              >
-                                Abrir arquivo
-                              </a>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                <span
+                  style={{
+                    color: "#666",
+                  }}
+                >
+                  Documentos
+                </span>
               </div>
-            )}
-          </section>
-        </>
-      )}
-    </main>
+
+              <div
+                style={{
+                  padding: "1.25rem",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  background: "#f8f8f8",
+                }}
+              >
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "1.8rem",
+                  }}
+                >
+                  {acoes.length}
+                </strong>
+
+                <span
+                  style={{
+                    color: "#666",
+                  }}
+                >
+                  Ações extensionistas
+                </span>
+              </div>
+            </div>
+
+            <section
+              style={{
+                marginTop: "2rem",
+              }}
+            >
+              <h2
+                style={{
+                  marginBottom: "1rem",
+                  color: "#222",
+                }}
+              >
+                Documentos cadastrados
+              </h2>
+
+              {documentos.length === 0 ? (
+                <div
+                  style={{
+                    padding: "1.5rem",
+                    border: "1px solid #ddd",
+                    borderRadius: "8px",
+                    color: "#666",
+                  }}
+                >
+                  Nenhum documento cadastrado.
+                </div>
+              ) : (
+                <div
+                  style={{
+                    overflowX: "auto",
+                    border: "1px solid #ddd",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <table
+                    style={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      minWidth: "900px",
+                    }}
+                  >
+                    <thead>
+                      <tr
+                        style={{
+                          background: "#f5f5f5",
+                        }}
+                      >
+                        <th
+                          style={{
+                            padding: "0.9rem",
+                            textAlign: "left",
+                            borderBottom:
+                              "1px solid #ddd",
+                          }}
+                        >
+                          Título
+                        </th>
+
+                        <th
+                          style={{
+                            padding: "0.9rem",
+                            textAlign: "left",
+                            borderBottom:
+                              "1px solid #ddd",
+                          }}
+                        >
+                          Tipo
+                        </th>
+
+                        <th
+                          style={{
+                            padding: "0.9rem",
+                            textAlign: "left",
+                            borderBottom:
+                              "1px solid #ddd",
+                          }}
+                        >
+                          Ação
+                        </th>
+
+                        <th
+                          style={{
+                            padding: "0.9rem",
+                            textAlign: "left",
+                            borderBottom:
+                              "1px solid #ddd",
+                          }}
+                        >
+                          Status
+                        </th>
+
+                        <th
+                          style={{
+                            padding: "0.9rem",
+                            textAlign: "left",
+                            borderBottom:
+                              "1px solid #ddd",
+                          }}
+                        >
+                          Arquivo
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {documentos.map((documento) => {
+                        const acao = acaoPorId.get(
+                          documento.acaoId
+                        );
+
+                        return (
+                          <tr key={documento.id}>
+                            <td
+                              style={{
+                                padding: "0.9rem",
+                                borderBottom:
+                                  "1px solid #eee",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {documento.titulo}
+                            </td>
+
+                            <td
+                              style={{
+                                padding: "0.9rem",
+                                borderBottom:
+                                  "1px solid #eee",
+                              }}
+                            >
+                              {documento.tipo}
+                            </td>
+
+                            <td
+                              style={{
+                                padding: "0.9rem",
+                                borderBottom:
+                                  "1px solid #eee",
+                              }}
+                            >
+                              {acao?.titulo ||
+                                `Ação #${documento.acaoId}`}
+                            </td>
+
+                            <td
+                              style={{
+                                padding: "0.9rem",
+                                borderBottom:
+                                  "1px solid #eee",
+                              }}
+                            >
+                              {acao?.status || "-"}
+                            </td>
+
+                            <td
+                              style={{
+                                padding: "0.9rem",
+                                borderBottom:
+                                  "1px solid #eee",
+                              }}
+                            >
+                              {documento.arquivoUrl ? (
+                                <a
+                                  href={
+                                    documento.arquivoUrl
+                                  }
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    color: "#0070f3",
+                                    textDecoration:
+                                      "none",
+                                  }}
+                                >
+                                  Abrir arquivo
+                                </a>
+                              ) : (
+                                "-"
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+          </>
+        )}
+      </main>
+    </ProtectedArea>
   );
 }

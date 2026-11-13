@@ -6,6 +6,7 @@ import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import styles from "../dashboard/dashboard.module.css";
 import { API_URL } from "../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 import {
   CalendarDays,
@@ -375,92 +376,94 @@ function Appointment({
   const realizado = status === "Realizado";
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "18px 0",
-        borderBottom: "1px solid #e2e8f0",
-      }}
-    >
+    <ProtectedArea>
       <div
         style={{
           display: "flex",
+          justifyContent: "space-between",
           alignItems: "center",
-          gap: 16,
+          padding: "18px 0",
+          borderBottom: "1px solid #e2e8f0",
         }}
       >
-        {/* HOUR */}
-        <div
-          style={{
-            background: "#eff6ff",
-            color: "#2563eb",
-            padding: "10px 14px",
-            borderRadius: 12,
-            fontWeight: 600,
-            minWidth: 80,
-            textAlign: "center",
-          }}
-        >
-          {hour}
-        </div>
-
-        {/* USER */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 12,
+            gap: 16,
           }}
         >
+          {/* HOUR */}
           <div
             style={{
-              width: 42,
-              height: 42,
-              borderRadius: "50%",
-              background: "#dbeafe",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              background: "#eff6ff",
               color: "#2563eb",
+              padding: "10px 14px",
+              borderRadius: 12,
+              fontWeight: 600,
+              minWidth: 80,
+              textAlign: "center",
             }}
           >
-            <User size={18} />
+            {hour}
           </div>
 
-          <div>
-            <strong>{patient}</strong>
-
-            <p
+          {/* USER */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            <div
               style={{
-                fontSize: 13,
-                color: "#64748b",
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                background: "#dbeafe",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#2563eb",
               }}
             >
-              {type}
-            </p>
+              <User size={18} />
+            </div>
+
+            <div>
+              <strong>{patient}</strong>
+
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "#64748b",
+                }}
+              >
+                {type}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* STATUS */}
-      <span
-        style={{
-          padding: "6px 12px",
-          borderRadius: 999,
-          fontSize: 12,
-          fontWeight: 600,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          background: realizado ? "#dcfce7" : "#fef9c3",
-          color: realizado ? "#16a34a" : "#ca8a04",
-        }}
-      >
-        {realizado && <CheckCircle2 size={12} />}
-        {status}
-      </span>
-    </div>
+        {/* STATUS */}
+        <span
+          style={{
+            padding: "6px 12px",
+            borderRadius: 999,
+            fontSize: 12,
+            fontWeight: 600,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            background: realizado ? "#dcfce7" : "#fef9c3",
+            color: realizado ? "#16a34a" : "#ca8a04",
+          }}
+        >
+          {realizado && <CheckCircle2 size={12} />}
+          {status}
+        </span>
+      </div>
+    </ProtectedArea>
   );
 }

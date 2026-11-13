@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { API_URL } from "../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 type Membro = {
   id: number;
@@ -157,387 +158,373 @@ export default function EquipePage() {
   }, [vinculos]);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "2rem",
-        maxWidth: "1200px",
-        margin: "0 auto",
-        fontFamily: "Arial, sans-serif",
-        background: "#fff",
-      }}
-    >
-      <div
+    <ProtectedArea>
+      <main
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "1rem",
-          flexWrap: "wrap",
+          minHeight: "100vh",
+          padding: "2rem",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          fontFamily: "Arial, sans-serif",
+          background: "#fff",
         }}
       >
-        <div>
-          <h1
-            style={{
-              margin: 0,
-              color: "#222",
-            }}
-          >
-            Equipe
-          </h1>
-
-          <p
-            style={{
-              marginTop: "0.5rem",
-              color: "#666",
-            }}
-          >
-            Visualização dos membros da equipe e das
-            ações extensionistas às quais estão
-            vinculados.
-          </p>
-        </div>
-
-        <Link
-          href="/membros/novo"
-          style={{
-            padding: "0.75rem 1rem",
-            borderRadius: "6px",
-            background: "#0070f3",
-            color: "#fff",
-            textDecoration: "none",
-            fontWeight: "bold",
-          }}
-        >
-          Cadastrar membro
-        </Link>
-      </div>
-
-      {erro && (
         <div
           style={{
-            marginTop: "1.5rem",
-            padding: "1rem",
-            borderRadius: "6px",
-            background: "#ffe5e5",
-            color: "#b00020",
-            border: "1px solid #ffb3b3",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1rem",
+            flexWrap: "wrap",
           }}
         >
-          {erro}
-        </div>
-      )}
-
-      {carregando ? (
-        <p
-          style={{
-            marginTop: "2rem",
-            color: "#666",
-          }}
-        >
-          Carregando equipe...
-        </p>
-      ) : (
-        <>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: "1rem",
-              marginTop: "2rem",
-            }}
-          >
-            <div
+          <div>
+            <h1
               style={{
-                padding: "1.25rem",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                background: "#f8f8f8",
-              }}
-            >
-              <strong
-                style={{
-                  display: "block",
-                  fontSize: "1.8rem",
-                }}
-              >
-                {membros.length}
-              </strong>
-
-              <span
-                style={{
-                  color: "#666",
-                }}
-              >
-                Membros
-              </span>
-            </div>
-
-            <div
-              style={{
-                padding: "1.25rem",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                background: "#f8f8f8",
-              }}
-            >
-              <strong
-                style={{
-                  display: "block",
-                  fontSize: "1.8rem",
-                }}
-              >
-                {acoes.length}
-              </strong>
-
-              <span
-                style={{
-                  color: "#666",
-                }}
-              >
-                Ações
-              </span>
-            </div>
-
-            <div
-              style={{
-                padding: "1.25rem",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                background: "#f8f8f8",
-              }}
-            >
-              <strong
-                style={{
-                  display: "block",
-                  fontSize: "1.8rem",
-                }}
-              >
-                {vinculos.length}
-              </strong>
-
-              <span
-                style={{
-                  color: "#666",
-                }}
-              >
-                Vínculos
-              </span>
-            </div>
-          </div>
-
-          <section
-            style={{
-              marginTop: "2rem",
-            }}
-          >
-            <h2
-              style={{
-                marginBottom: "1rem",
+                margin: 0,
                 color: "#222",
               }}
             >
-              Membros da equipe
-            </h2>
+              Equipe
+            </h1>
 
-            {membros.length === 0 ? (
-              <p
-                style={{
-                  color: "#666",
-                }}
-              >
-                Nenhum membro cadastrado.
-              </p>
-            ) : (
+            <p
+              style={{
+                marginTop: "0.5rem",
+                color: "#666",
+              }}
+            >
+              Visualização dos membros da equipe e das
+              ações extensionistas às quais estão
+              vinculados.
+            </p>
+          </div>
+
+          <Link
+            href="/membros/novo"
+            style={{
+              padding: "0.75rem 1rem",
+              borderRadius: "6px",
+              background: "#0070f3",
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Cadastrar membro
+          </Link>
+        </div>
+
+        {erro && (
+          <div
+            style={{
+              marginTop: "1.5rem",
+              padding: "1rem",
+              borderRadius: "6px",
+              background: "#ffe5e5",
+              color: "#b00020",
+              border: "1px solid #ffb3b3",
+            }}
+          >
+            {erro}
+          </div>
+        )}
+
+        {carregando ? (
+          <p
+            style={{
+              marginTop: "2rem",
+              color: "#666",
+            }}
+          >
+            Carregando equipe...
+          </p>
+        ) : (
+          <>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "1rem",
+                marginTop: "2rem",
+              }}
+            >
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
+                  padding: "1.25rem",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  background: "#f8f8f8",
                 }}
               >
-                {membros.map((membro) => {
-                  const pessoa = pessoaPorId.get(
-                    membro.pessoaId
-                  );
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "1.8rem",
+                  }}
+                >
+                  {membros.length}
+                </strong>
 
-                  const departamento =
-                    membro.departamentoId
-                      ? departamentoPorId.get(
-                          membro.departamentoId
-                        )
-                      : undefined;
+                <span
+                  style={{
+                    color: "#666",
+                  }}
+                >
+                  Membros
+                </span>
+              </div>
 
-                  const membrosVinculos =
-                    vinculosPorMembro.get(
-                      membro.id
-                    ) || [];
+              <div
+                style={{
+                  padding: "1.25rem",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  background: "#f8f8f8",
+                }}
+              >
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "1.8rem",
+                  }}
+                >
+                  {acoes.length}
+                </strong>
 
-                  return (
-                    <article
-                      key={membro.id}
-                      style={{
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                        padding: "1.25rem",
-                        background: "#fff",
-                      }}
-                    >
-                      <div
+                <span
+                  style={{
+                    color: "#666",
+                  }}
+                >
+                  Ações
+                </span>
+              </div>
+
+              <div
+                style={{
+                  padding: "1.25rem",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  background: "#f8f8f8",
+                }}
+              >
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "1.8rem",
+                  }}
+                >
+                  {vinculos.length}
+                </strong>
+
+                <span
+                  style={{
+                    color: "#666",
+                  }}
+                >
+                  Vínculos
+                </span>
+              </div>
+            </div>
+
+            <section
+              style={{
+                marginTop: "2rem",
+              }}
+            >
+              <h2
+                style={{
+                  marginBottom: "1rem",
+                  color: "#222",
+                }}
+              >
+                Membros da equipe
+              </h2>
+
+              {membros.length === 0 ? (
+                <p
+                  style={{
+                    color: "#666",
+                  }}
+                >
+                  Nenhum membro cadastrado.
+                </p>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
+                  {membros.map((membro) => {
+                    const pessoa = pessoaPorId.get(
+                      membro.pessoaId
+                    );
+
+                    const departamento =
+                      membro.departamentoId
+                        ? departamentoPorId.get(
+                            membro.departamentoId
+                          )
+                        : undefined;
+
+                    const membrosVinculos =
+                      vinculosPorMembro.get(
+                        membro.id
+                      ) || [];
+
+                    return (
+                      <article
+                        key={membro.id}
                         style={{
-                          display: "flex",
-                          justifyContent:
-                            "space-between",
-                          gap: "1rem",
-                          flexWrap: "wrap",
+                          border: "1px solid #ddd",
+                          borderRadius: "8px",
+                          padding: "1.25rem",
+                          background: "#fff",
                         }}
                       >
-                        <div>
-                          <h3
-                            style={{
-                              margin: 0,
-                              color: "#222",
-                            }}
-                          >
-                            {pessoa?.nome ||
-                              `Pessoa #${membro.pessoaId}`}
-                          </h3>
-
-                          <p
-                            style={{
-                              margin:
-                                "0.5rem 0 0",
-                              color: "#666",
-                            }}
-                          >
-                            Tipo: {membro.tipo}
-                          </p>
-
-                          {membro.matricula && (
-                            <p
-                              style={{
-                                margin:
-                                  "0.25rem 0 0",
-                                color: "#666",
-                              }}
-                            >
-                              Matrícula:{" "}
-                              {membro.matricula}
-                            </p>
-                          )}
-
-                          {membro.vinculo && (
-                            <p
-                              style={{
-                                margin:
-                                  "0.25rem 0 0",
-                                color: "#666",
-                              }}
-                            >
-                              Vínculo:{" "}
-                              {membro.vinculo}
-                            </p>
-                          )}
-
-                          {departamento && (
-                            <p
-                              style={{
-                                margin:
-                                  "0.25rem 0 0",
-                                color: "#666",
-                              }}
-                            >
-                              Departamento:{" "}
-                              {departamento.nome}
-                            </p>
-                          )}
-                        </div>
-
                         <div
                           style={{
-                            minWidth: "260px",
-                            flex: "1",
+                            display: "flex",
+                            justifyContent:
+                              "space-between",
+                            gap: "1rem",
+                            flexWrap: "wrap",
                           }}
                         >
-                          <strong
+                          <div>
+                            <h3
+                              style={{
+                                margin: 0,
+                                color: "#222",
+                              }}
+                            >
+                              {pessoa?.nome ||
+                                `Pessoa #${membro.pessoaId}`}
+                            </h3>
+
+                            <p
+                              style={{
+                                margin:
+                                  "0.5rem 0 0",
+                                color: "#666",
+                              }}
+                            >
+                              Tipo: {membro.tipo}
+                            </p>
+
+                            {membro.matricula && (
+                              <p
+                                style={{
+                                  margin:
+                                    "0.25rem 0 0",
+                                  color: "#666",
+                                }}
+                              >
+                                Matrícula:{" "}
+                                {membro.matricula}
+                              </p>
+                            )}
+
+                            {membro.vinculo && (
+                              <p
+                                style={{
+                                  margin:
+                                    "0.25rem 0 0",
+                                  color: "#666",
+                                }}
+                              >
+                                Vínculo:{" "}
+                                {membro.vinculo}
+                              </p>
+                            )}
+
+                            {departamento && (
+                              <p
+                                style={{
+                                  margin:
+                                    "0.25rem 0 0",
+                                  color: "#666",
+                                }}
+                              >
+                                Departamento:{" "}
+                                {departamento.nome}
+                              </p>
+                            )}
+                          </div>
+
+                          <div
                             style={{
-                              display: "block",
-                              marginBottom: "0.75rem",
+                              minWidth: "260px",
+                              flex: "1",
                             }}
                           >
-                            Ações vinculadas
-                          </strong>
-
-                          {membrosVinculos.length ===
-                          0 ? (
-                            <span
+                            <strong
                               style={{
-                                color: "#a00",
+                                display: "block",
+                                marginBottom: "0.75rem",
                               }}
                             >
-                              Não vinculado a
-                              nenhuma ação.
-                            </span>
-                          ) : (
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection:
-                                  "column",
-                                gap: "0.5rem",
-                              }}
-                            >
-                              {membrosVinculos.map(
-                                (vinculo) => {
-                                  const acao =
-                                    acaoPorId.get(
-                                      vinculo.acaoId
-                                    );
+                              Ações vinculadas
+                            </strong>
 
-                                  return (
-                                    <div
-                                      key={
-                                        vinculo.id
-                                      }
-                                      style={{
-                                        padding:
-                                          "0.75rem",
-                                        border:
-                                          "1px solid #eee",
-                                        borderRadius:
-                                          "6px",
-                                        background:
-                                          "#f8f8f8",
-                                      }}
-                                    >
+                            {membrosVinculos.length ===
+                            0 ? (
+                              <span
+                                style={{
+                                  color: "#a00",
+                                }}
+                              >
+                                Não vinculado a
+                                nenhuma ação.
+                              </span>
+                            ) : (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection:
+                                    "column",
+                                  gap: "0.5rem",
+                                }}
+                              >
+                                {membrosVinculos.map(
+                                  (vinculo) => {
+                                    const acao =
+                                      acaoPorId.get(
+                                        vinculo.acaoId
+                                      );
+
+                                    return (
                                       <div
+                                        key={
+                                          vinculo.id
+                                        }
                                         style={{
-                                          fontWeight:
-                                            "bold",
-                                          color:
-                                            "#222",
+                                          padding:
+                                            "0.75rem",
+                                          border:
+                                            "1px solid #eee",
+                                          borderRadius:
+                                            "6px",
+                                          background:
+                                            "#f8f8f8",
                                         }}
                                       >
-                                        {acao?.titulo ||
-                                          `Ação #${vinculo.acaoId}`}
-                                      </div>
+                                        <div
+                                          style={{
+                                            fontWeight:
+                                              "bold",
+                                            color:
+                                              "#222",
+                                          }}
+                                        >
+                                          {acao?.titulo ||
+                                            `Ação #${vinculo.acaoId}`}
+                                        </div>
 
-                                      <div
-                                        style={{
-                                          marginTop:
-                                            "0.25rem",
-                                          fontSize:
-                                            "0.9rem",
-                                          color:
-                                            "#666",
-                                        }}
-                                      >
-                                        Papel:{" "}
-                                        {vinculo.papel}
-                                      </div>
-
-                                      {acao && (
                                         <div
                                           style={{
                                             marginTop:
@@ -548,44 +535,60 @@ export default function EquipePage() {
                                               "#666",
                                           }}
                                         >
-                                          Status:{" "}
-                                          {
-                                            acao.status
-                                          }
+                                          Papel:{" "}
+                                          {vinculo.papel}
                                         </div>
-                                      )}
-                                    </div>
-                                  );
-                                }
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            )}
-          </section>
 
-          <div
-            style={{
-              marginTop: "2rem",
-            }}
-          >
-            <Link
-              href="/membros"
+                                        {acao && (
+                                          <div
+                                            style={{
+                                              marginTop:
+                                                "0.25rem",
+                                              fontSize:
+                                                "0.9rem",
+                                              color:
+                                                "#666",
+                                            }}
+                                          >
+                                            Status:{" "}
+                                            {
+                                              acao.status
+                                            }
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+
+            <div
               style={{
-                color: "#0070f3",
-                textDecoration: "none",
+                marginTop: "2rem",
               }}
             >
-              ← Gerenciar membros e vínculos
-            </Link>
-          </div>
-        </>
-      )}
-    </main>
+              <Link
+                href="/membros"
+                style={{
+                  color: "#0070f3",
+                  textDecoration: "none",
+                }}
+              >
+                ← Gerenciar membros e vínculos
+              </Link>
+            </div>
+          </>
+        )}
+      </main>
+    </ProtectedArea>
   );
 }
