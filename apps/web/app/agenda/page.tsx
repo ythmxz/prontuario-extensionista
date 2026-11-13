@@ -155,178 +155,180 @@ export default function Agenda() {
   ];
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
+    <ProtectedArea>
+      <div className={styles.container}>
+        <Sidebar />
 
-      <main className={styles.main}>
-        {/* HEADER */}
-        <div className={styles.header}>
-          <h1>Agenda</h1>
-          <p>Organize os atendimentos e horários</p>
-        </div>
+        <main className={styles.main}>
+          {/* HEADER */}
+          <div className={styles.header}>
+            <h1>Agenda</h1>
+            <p>Organize os atendimentos e horários</p>
+          </div>
 
-        {/* TOP */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: 20,
-            marginBottom: 20,
-          }}
-        >
-          {/* CARDS */}
+          {/* TOP */}
           <div
             style={{
               display: "flex",
+              justifyContent: "space-between",
+              marginTop: 20,
+              marginBottom: 20,
+            }}
+          >
+            {/* CARDS */}
+            <div
+              style={{
+                display: "flex",
+                gap: 20,
+              }}
+            >
+              <MiniCard
+                title="Atendimentos Hoje"
+                value={loading ? "-" : atendimentosHoje.length}
+                icon={<CalendarDays size={18} />}
+              />
+
+              <MiniCard
+                title="Pendentes"
+                value={loading ? "-" : pendentesHoje}
+                icon={<Clock3 size={18} />}
+              />
+            </div>
+
+            {/* BUTTON */}
+            <Link
+              href="/agenda/novo"
+              style={{
+                background: "#2563eb",
+                color: "white",
+                borderRadius: 14,
+                padding: "12px 18px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                fontWeight: 600,
+                height: "fit-content",
+                textDecoration: "none",
+              }}
+            >
+              <Plus size={18} />
+              Novo Atendimento
+            </Link>
+          </div>
+
+          {erro && (
+            <div
+              className={styles.box}
+              style={{ marginBottom: 20, border: "1px solid #fecaca" }}
+            >
+              <strong style={{ color: "#dc2626" }}>
+                Erro ao carregar atendimentos
+              </strong>
+              <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
+                {erro}
+              </p>
+            </div>
+          )}
+
+          {/* CONTENT */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "2fr 1fr",
               gap: 20,
             }}
           >
-            <MiniCard
-              title="Atendimentos Hoje"
-              value={loading ? "-" : atendimentosHoje.length}
-              icon={<CalendarDays size={18} />}
-            />
+            {/* ATENDIMENTOS */}
+            <div className={styles.box}>
+              <h3>Atendimentos de Hoje</h3>
 
-            <MiniCard
-              title="Pendentes"
-              value={loading ? "-" : pendentesHoje}
-              icon={<Clock3 size={18} />}
-            />
-          </div>
+              <div style={{ marginTop: 20 }}>
+                {loading ? (
+                  <p style={{ fontSize: 13, color: "#64748b" }}>
+                    Carregando atendimentos...
+                  </p>
+                ) : atendimentosHoje.length === 0 ? (
+                  <p style={{ fontSize: 13, color: "#64748b" }}>
+                    Nenhum atendimento agendado para hoje.
+                  </p>
+                ) : (
+                  atendimentosHoje.map((atendimento) => {
+                    const data = new Date(atendimento.dataAtendimento);
 
-          {/* BUTTON */}
-          <Link
-            href="/agenda/novo"
-            style={{
-              background: "#2563eb",
-              color: "white",
-              borderRadius: 14,
-              padding: "12px 18px",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              fontWeight: 600,
-              height: "fit-content",
-              textDecoration: "none",
-            }}
-          >
-            <Plus size={18} />
-            Novo Atendimento
-          </Link>
-        </div>
+                    return (
+                      <Appointment
+                        key={atendimento.id}
+                        hour={formatarHora(data)}
+                        patient={atendimento.prontuario.participante.pessoa.nome}
+                        type={
+                          TIPOS[atendimento.tipoAtendimento] ??
+                          atendimento.tipoAtendimento
+                        }
+                        status={data > agora ? "Pendente" : "Realizado"}
+                      />
+                    );
+                  })
+                )}
+              </div>
+            </div>
 
-        {erro && (
-          <div
-            className={styles.box}
-            style={{ marginBottom: 20, border: "1px solid #fecaca" }}
-          >
-            <strong style={{ color: "#dc2626" }}>
-              Erro ao carregar atendimentos
-            </strong>
-            <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
-              {erro}
-            </p>
-          </div>
-        )}
+            {/* CALENDÁRIO */}
+            <div className={styles.box}>
+              <h3>
+                {MESES[agora.getMonth()]} {agora.getFullYear()}
+              </h3>
 
-        {/* CONTENT */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr",
-            gap: 20,
-          }}
-        >
-          {/* ATENDIMENTOS */}
-          <div className={styles.box}>
-            <h3>Atendimentos de Hoje</h3>
-
-            <div style={{ marginTop: 20 }}>
-              {loading ? (
-                <p style={{ fontSize: 13, color: "#64748b" }}>
-                  Carregando atendimentos...
-                </p>
-              ) : atendimentosHoje.length === 0 ? (
-                <p style={{ fontSize: 13, color: "#64748b" }}>
-                  Nenhum atendimento agendado para hoje.
-                </p>
-              ) : (
-                atendimentosHoje.map((atendimento) => {
-                  const data = new Date(atendimento.dataAtendimento);
+              <div
+                style={{
+                  marginTop: 20,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(7, 1fr)",
+                  gap: 10,
+                  textAlign: "center",
+                }}
+              >
+                {calendario.map((item, index) => {
+                  const hoje = item === agora.getDate();
+                  const temAtendimento =
+                    typeof item === "number" && diasComAtendimento.has(item);
 
                   return (
-                    <Appointment
-                      key={atendimento.id}
-                      hour={formatarHora(data)}
-                      patient={atendimento.prontuario.participante.pessoa.nome}
-                      type={
-                        TIPOS[atendimento.tipoAtendimento] ??
-                        atendimento.tipoAtendimento
-                      }
-                      status={data > agora ? "Pendente" : "Realizado"}
-                    />
+                    <div
+                      key={index}
+                      style={{
+                        padding: 10,
+                        borderRadius: 10,
+                        background: hoje ? "#2563eb" : "transparent",
+                        color: hoje ? "white" : "#0f172a",
+                        fontWeight: typeof item === "number" ? 600 : 400,
+                        position: "relative",
+                      }}
+                    >
+                      {item}
+
+                      {temAtendimento && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            bottom: 4,
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            width: 5,
+                            height: 5,
+                            borderRadius: "50%",
+                            background: hoje ? "white" : "#2563eb",
+                          }}
+                        />
+                      )}
+                    </div>
                   );
-                })
-              )}
+                })}
+              </div>
             </div>
           </div>
-
-          {/* CALENDÁRIO */}
-          <div className={styles.box}>
-            <h3>
-              {MESES[agora.getMonth()]} {agora.getFullYear()}
-            </h3>
-
-            <div
-              style={{
-                marginTop: 20,
-                display: "grid",
-                gridTemplateColumns: "repeat(7, 1fr)",
-                gap: 10,
-                textAlign: "center",
-              }}
-            >
-              {calendario.map((item, index) => {
-                const hoje = item === agora.getDate();
-                const temAtendimento =
-                  typeof item === "number" && diasComAtendimento.has(item);
-
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      padding: 10,
-                      borderRadius: 10,
-                      background: hoje ? "#2563eb" : "transparent",
-                      color: hoje ? "white" : "#0f172a",
-                      fontWeight: typeof item === "number" ? 600 : 400,
-                      position: "relative",
-                    }}
-                  >
-                    {item}
-
-                    {temAtendimento && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          bottom: 4,
-                          left: "50%",
-                          transform: "translateX(-50%)",
-                          width: 5,
-                          height: 5,
-                          borderRadius: "50%",
-                          background: hoje ? "white" : "#2563eb",
-                        }}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </ProtectedArea>
   );
 }
 
@@ -376,94 +378,92 @@ function Appointment({
   const realizado = status === "Realizado";
 
   return (
-    <ProtectedArea>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "18px 0",
+        borderBottom: "1px solid #e2e8f0",
+      }}
+    >
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          padding: "18px 0",
-          borderBottom: "1px solid #e2e8f0",
+          gap: 16,
         }}
       >
+        {/* HOUR */}
+        <div
+          style={{
+            background: "#eff6ff",
+            color: "#2563eb",
+            padding: "10px 14px",
+            borderRadius: 12,
+            fontWeight: 600,
+            minWidth: 80,
+            textAlign: "center",
+          }}
+        >
+          {hour}
+        </div>
+
+        {/* USER */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 16,
+            gap: 12,
           }}
         >
-          {/* HOUR */}
           <div
             style={{
-              background: "#eff6ff",
-              color: "#2563eb",
-              padding: "10px 14px",
-              borderRadius: 12,
-              fontWeight: 600,
-              minWidth: 80,
-              textAlign: "center",
-            }}
-          >
-            {hour}
-          </div>
-
-          {/* USER */}
-          <div
-            style={{
+              width: 42,
+              height: 42,
+              borderRadius: "50%",
+              background: "#dbeafe",
               display: "flex",
               alignItems: "center",
-              gap: 12,
+              justifyContent: "center",
+              color: "#2563eb",
             }}
           >
-            <div
+            <User size={18} />
+          </div>
+
+          <div>
+            <strong>{patient}</strong>
+
+            <p
               style={{
-                width: 42,
-                height: 42,
-                borderRadius: "50%",
-                background: "#dbeafe",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#2563eb",
+                fontSize: 13,
+                color: "#64748b",
               }}
             >
-              <User size={18} />
-            </div>
-
-            <div>
-              <strong>{patient}</strong>
-
-              <p
-                style={{
-                  fontSize: 13,
-                  color: "#64748b",
-                }}
-              >
-                {type}
-              </p>
-            </div>
+              {type}
+            </p>
           </div>
         </div>
-
-        {/* STATUS */}
-        <span
-          style={{
-            padding: "6px 12px",
-            borderRadius: 999,
-            fontSize: 12,
-            fontWeight: 600,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            background: realizado ? "#dcfce7" : "#fef9c3",
-            color: realizado ? "#16a34a" : "#ca8a04",
-          }}
-        >
-          {realizado && <CheckCircle2 size={12} />}
-          {status}
-        </span>
       </div>
-    </ProtectedArea>
+
+      {/* STATUS */}
+      <span
+        style={{
+          padding: "6px 12px",
+          borderRadius: 999,
+          fontSize: 12,
+          fontWeight: 600,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          background: realizado ? "#dcfce7" : "#fef9c3",
+          color: realizado ? "#16a34a" : "#ca8a04",
+        }}
+      >
+        {realizado && <CheckCircle2 size={12} />}
+        {status}
+      </span>
+    </div>
   );
 }
