@@ -12,10 +12,10 @@ import {
 } from "lucide-react";
 
 import styles from "@/app/dashboard/dashboard.module.css"; // TODO: não devia ser da dashboard. Mover para outro lugar...
-import { API_URL, getWithAuth } from "@/app/common";
+import { API_URL, getWithAuth, logOut } from "@/app/common";
 
 /**
- * Barra de navegação
+ * Barra de navegação lateral do aplicativo. Contém as rotas principais e algumas informações sobre a conta.
  */
 export default function Sidebar() {
   const [userName, setUserName] = useState<string>("");
@@ -43,7 +43,8 @@ export default function Sidebar() {
   type Item = {
     title: string,
     icon: ReactNode,
-    href: string,
+    href?: string,
+    onClick?: () => void,
   };
 
   // TODO: usar "className={styles.active}" na rota atual
@@ -53,11 +54,12 @@ export default function Sidebar() {
     { title: "Prontuários 🚧", icon: (<FileText size={18}/>), href: "/prontuarios" },
     { title: "Relatórios 🚧", icon: (<BarChart2 size={18}/>), href: "/relatorios" },
     { title: "Agenda 🚧", icon: (<Calendar size={18}/>), href: "/agenda" },
-    { title: "Pacientes 🚧", icon: (<User size={18}/>), href: "/pacientes" },
+    { title: "Pacientes", icon: (<User size={18}/>), href: "/pacientes" },
     { title: "Configurações 🚧", icon: (<Settings size={18}/>), href: "/configuracoes" },
 
     // rotas experimentais / de teste
     { title: "HomeFidelis ❗", icon: (<Home size={18}/>), href: "/home" },
+    { title: "Sair da conta ❗", icon: (<Home size={18}/>), onClick: logOut },
   ];
 
   return (
@@ -69,10 +71,10 @@ export default function Sidebar() {
 
         <ul className={styles.menu}>
           {items.map(i => (
-            <Link href={i.href} key={i.title}>
+            <Link href={i.href ?? ""} onClick={i.onClick} key={i.title}>
               <li>
-                  {i.icon}
-                  {i.title}
+                {i.icon}
+                {i.title}
               </li>
             </Link>
           ))}
@@ -90,7 +92,6 @@ export default function Sidebar() {
           </p>
         </div>
       </div>
-
     </aside>
   );
 }
