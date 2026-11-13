@@ -9,7 +9,7 @@ const paginas = [
   { nome: "Configurações", rota: "/configuracoes" },
   { nome: "Ações", rota: "/acoes" },
   { nome: "Nova Ação", rota: "/acoes/novo" },
-  { nome: "Participantes", rota: "/participantes" },
+  { nome: "Pacientes", rota: "/pacientes" },
   { nome: "Membros", rota: "/membros" },
   { nome: "Novo Membro", rota: "/membros/novo" },
   { nome: "Equipe", rota: "/equipe" },
