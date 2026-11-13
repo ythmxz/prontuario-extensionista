@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { isLoggedIn } from "@/app/common";
 
-export default function ProtectedArea({ children }: { children: React.ReactNode }) {
+function ProtectedAreaContent({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -27,5 +28,13 @@ export default function ProtectedArea({ children }: { children: React.ReactNode 
 
   if (checking) return null;
 
-  return children;
+  return <>{children}</>;
+}
+
+export default function ProtectedArea({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={null}>
+      <ProtectedAreaContent>{children}</ProtectedAreaContent>
+    </Suspense>
+  );
 }
