@@ -39,7 +39,7 @@ export default function Dashboard() {
         <main className={styles.main}>
 
           <div className={styles.header}>
-            <h1>Núcleo Bem Viver</h1>
+            <h1>Núcleo Jovem Bom de Vida</h1>
             <p>Painel de acompanhamento da comunidade</p>
           </div>
 

@@ -48,13 +48,18 @@
   transition: 0.2s;
 }
 
-.menu li:hover {
+.menu li:not(.active):hover {
   background: rgba(255,255,255,0.1);
 }
 
 .active {
   background: linear-gradient(90deg, #ff5a00, #ff6f1a);
   box-shadow: 0 6px 14px rgba(255, 90, 0, 0.35);
+}
+
+.menu li.active:hover {
+  background: linear-gradient(90deg, #ff6712, #ff7b2b);
+  box-shadow: 0 6px 16px rgba(255, 90, 0, 0.45);
 }
 
 /* USER */
