@@ -513,7 +513,7 @@ export default function ParticipacoesPage() {
             }}
           >
             <Link
-              href="/participantes"
+              href="/pacientes"
               style={{
                 color: "#0070f3",
                 textDecoration: "none",
