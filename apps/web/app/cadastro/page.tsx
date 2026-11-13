@@ -4,7 +4,6 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { API_URL } from "../common";
 import Link from "next/link";
 import Image from "next/image";
-import ProtectedArea from "@/components/ProtectedArea";
 
 const initialFormState = {
   name: "",
@@ -92,130 +91,128 @@ export default function CadastroPage() {
   };
 
   return (
-    <ProtectedArea>
-      <main className="container">
-        <section className="left-side">
-          <header className="top">
-            <div className="brand">
-              <div className="heart">
-                <Image width={48} height={48} src="/img/c.png" alt="Coração" />
-              </div>
-
-              <div>
-                <span>NJBV</span>
-                <h1>Prontuário Extensionista</h1>
-                <p>Núcleo Jovem Bom de Vida</p>
-              </div>
+    <main className="container">
+      <section className="left-side">
+        <header className="top">
+          <div className="brand">
+            <div className="heart">
+              <Image width={48} height={48} src="/img/c.png" alt="Coração" />
             </div>
 
-            <div className="logos">
-              <Image width={83} height={83} src="/img/uesc.png" alt="UESC" className="logo-uesc" />
-              <Image width={77} height={167} src="/img/njbv.png" alt="NJBV" className="logo-njbv" />
+            <div>
+              <span>NJBV</span>
+              <h1>Prontuário Extensionista</h1>
+              <p>Núcleo Jovem Bom de Vida</p>
             </div>
-          </header>
-
-          <div className="welcome">
-            <h2>Crie sua conta!</h2>
-            <div className="line"></div>
-            <p>Faça seu cadastro para acessar o sistema do prontuário extensionista</p>
           </div>
 
-          <footer>
-            <div className="insta">
-              <Image width={27} height={27} src="/img/instagram.png" alt="Instagram" />
-              <span>@njbv.oficial</span>
-            </div>
-          </footer>
-        </section>
+          <div className="logos">
+            <Image width={83} height={83} src="/img/uesc.png" alt="UESC" className="logo-uesc" />
+            <Image width={77} height={167} src="/img/njbv.png" alt="NJBV" className="logo-njbv" />
+          </div>
+        </header>
 
-        <section className="right-side">
-          <div className="register-card">
-            <div className="user-icon">
-              <Image width={66} height={66} src="/img/user.png" alt="Usuário" />
-            </div>
+        <div className="welcome">
+          <h2>Crie sua conta!</h2>
+          <div className="line"></div>
+          <p>Faça seu cadastro para acessar o sistema do prontuário extensionista</p>
+        </div>
 
-            <h2>Criar conta</h2>
+        <footer>
+          <div className="insta">
+            <Image width={27} height={27} src="/img/instagram.png" alt="Instagram" />
+            <span>@njbv.oficial</span>
+          </div>
+        </footer>
+      </section>
 
-            <form className="register-form" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Nome completo"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="E-mail"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="cpf"
-                placeholder="CPF"
-                value={formData.cpf}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Telefone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                placeholder="Senha"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirmar senha"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
+      <section className="right-side">
+        <div className="register-card">
+          <div className="user-icon">
+            <Image width={66} height={66} src="/img/user.png" alt="Usuário" />
+          </div>
 
-              <button type="submit" className="signup-btn" disabled={isLoading}>
-                {isLoading ? "Cadastrando..." : "Cadastrar"}
-              </button>
+          <h2>Criar conta</h2>
 
-              {
-              // <div className="divider">
-              //   <span></span>
-              //   <p>ou</p>
-              //   <span></span>
-              // </div>
+          <form className="register-form" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Nome completo"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="E-mail"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="cpf"
+              placeholder="CPF"
+              value={formData.cpf}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Telefone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Senha"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirmar senha"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
 
-              // <button type="button" className="google-btn">
-              //   <Image width={48} height={48} src="/img/google.png" alt="Google" />
-              //   Cadastrar com Google
-              // </button>
-              }
+            <button type="submit" className="signup-btn" disabled={isLoading}>
+              {isLoading ? "Cadastrando..." : "Cadastrar"}
+            </button>
 
-              {message ? (
-                <p className={`form-feedback ${status}`} aria-live="polite">
-                  {message}
-                </p>
-              ) : null}
+            {
+            // <div className="divider">
+            //   <span></span>
+            //   <p>ou</p>
+            //   <span></span>
+            // </div>
 
-              <p className="login-link">
-                Já tem uma conta? <Link href="/login">Entrar</Link>
+            // <button type="button" className="google-btn">
+            //   <Image width={48} height={48} src="/img/google.png" alt="Google" />
+            //   Cadastrar com Google
+            // </button>
+            }
+
+            {message ? (
+              <p className={`form-feedback ${status}`} aria-live="polite">
+                {message}
               </p>
-            </form>
-          </div>
-        </section>
-      </main>
-    </ProtectedArea>
+            ) : null}
+
+            <p className="login-link">
+              Já tem uma conta? <Link href="/login">Entrar</Link>
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
   );
 }
