@@ -2,6 +2,7 @@
   "name": "prontuario-extensionista",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@12.9.1",
   "scripts": {
     "build": "turbo run build",
