@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { API_URL } from "../common";
+import { API_URL } from "../../common";
 
 const inputStyle = {
   width: "100%",

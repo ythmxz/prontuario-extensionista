@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { API_URL } from "../common";
+import { API_URL } from "../../common";
 
 type Acao = {
   id: number;

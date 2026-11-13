@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { API_URL } from "../common";
+import { API_URL } from "../../common";
 
 export default function NovaAcaoPage() {
   const router = useRouter();
