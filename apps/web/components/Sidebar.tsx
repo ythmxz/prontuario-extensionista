@@ -53,9 +53,9 @@ export default function Sidebar() {
 
   const items: Item[] = [
     { title: "Início 🚧", icon: (<Home size={18}/>), href: "/dashboard" },
-    { title: "Prontuários 🚧", icon: (<FileText size={18}/>), href: "/prontuarios" },
+    { title: "Prontuários", icon: (<FileText size={18}/>), href: "/prontuarios" },
     { title: "Relatórios 🚧", icon: (<BarChart2 size={18}/>), href: "/relatorios" },
-    { title: "Agenda 🚧", icon: (<Calendar size={18}/>), href: "/agenda" },
+    { title: "Agenda", icon: (<Calendar size={18}/>), href: "/agenda" },
     { title: "Pacientes", icon: (<User size={18}/>), href: "/pacientes" },
     { title: "Configurações 🚧", icon: (<Settings size={18}/>), href: "/configuracoes" },
 
