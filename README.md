@@ -208,8 +208,6 @@ pnpm --filter @prontuario-extensionista/api build
 
 ### Requisitos Funcionais (RF)
 
-Os requisitos funcionais apresentados a seguir foram identificados a partir da análise dos modelos de dados, rotas da API e páginas do frontend do sistema.
-
 | ID | Módulo | Requisito Funcional |
 |:---:|---|---|
 | RF01 | Autenticação | O sistema deve permitir que usuários realizem login utilizando e-mail e senha, retornando um token JWT com validade de 1 hora e os dados básicos do usuário. |
@@ -235,8 +233,6 @@ Os requisitos funcionais apresentados a seguir foram identificados a partir da a
 
 
 ### Requisitos Não Funcionais (RNF)
-
-Os requisitos não funcionais foram classificados conforme as características de qualidade de software estabelecidas pela norma ISO/IEC 25010, considerando aspectos técnicos evidenciados na arquitetura e no código-fonte do projeto.
 
 | ID | Categoria | Descrição do Requisito Não Funcional |
 |:---:|---|---|
