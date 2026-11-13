@@ -424,33 +424,6 @@ sequenceDiagram
         Banco-->>Sistema: Informa falha de integridade
         Sistema-->>Interface: Retorna motivo do erro
         Interface-->>Usuario: Exibe mensagem de erro
-    end           
-
-```
-
-### Cadastro de Ação Extensionista
-
-```mermaid
-
-sequenceDiagram
-    actor Usuario as Usuário
-    participant Interface as Interface Web
-    participant Sistema as Sistema
-    participant Banco as Banco de Dados
-
-    Usuario->>Interface: Informa dados da ação (título, tipo, local, linha, datas, carga horária, modalidade, público e status)
-    Interface->>Interface: Valida campos obrigatórios
-    Interface->>Sistema: Solicita cadastro da ação extensionista
-    Sistema->>Banco: Verifica vínculos de tipo, local e linha de atuação e salva a ação
-
-    alt Dados válidos
-        Banco-->>Sistema: Confirma criação da ação
-        Sistema-->>Interface: Retorna confirmação do cadastro
-        Interface-->>Usuario: Exibe mensagem de sucesso e redireciona para a lista de ações
-    else Dados inválidos ou vínculo inexistente
-        Banco-->>Sistema: Informa falha de integridade
-        Sistema-->>Interface: Retorna motivo do erro
-        Interface-->>Usuario: Exibe mensagem de erro
     end     
 
 ```
