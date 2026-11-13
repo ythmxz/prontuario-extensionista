@@ -1,21 +1,163 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import styles from "../dashboard/dashboard.module.css";
+import { API_URL } from "../common";
 
 import {
   CalendarDays,
+  CheckCircle2,
   Clock3,
   Plus,
   User,
 } from "lucide-react";
 
+type Atendimento = {
+  id: number;
+  dataAtendimento: string;
+  tipoAtendimento: string;
+  motivoConsulta: string;
+  prontuario: {
+    participante: {
+      pessoa: { nome: string };
+    };
+  };
+};
+
+const TIPOS: Record<string, string> = {
+  CONSULTA: "Consulta",
+  TRIAGEM: "Triagem",
+  ORIENTACAO: "Orientação",
+  ACOMPANHAMENTO: "Acompanhamento",
+  OUTRO: "Outro",
+};
+
+const MESES = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+];
+
+function mesmoDia(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+function formatarHora(data: Date) {
+  return data.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export default function Agenda() {
+  const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState("");
+  const [agora, setAgora] = useState(() => new Date());
+
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const response = await fetch(`${API_URL}/atendimentos`, {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Erro ao carregar atendimentos: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        setAtendimentos(Array.isArray(data) ? data : []);
+        setAgora(new Date());
+      } catch (error) {
+        setErro(
+          error instanceof Error
+            ? error.message
+            : "Não foi possível carregar os atendimentos."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregar();
+  }, []);
+
+  const atendimentosHoje = useMemo(() => {
+    return atendimentos
+      .filter((a) => mesmoDia(new Date(a.dataAtendimento), agora))
+      .sort(
+        (a, b) =>
+          new Date(a.dataAtendimento).getTime() -
+          new Date(b.dataAtendimento).getTime()
+      );
+  }, [atendimentos, agora]);
+
+  const pendentesHoje = atendimentosHoje.filter(
+    (a) => new Date(a.dataAtendimento) > agora
+  ).length;
+
+  const diasComAtendimento = useMemo(() => {
+    const dias = new Set<number>();
+
+    atendimentos.forEach((a) => {
+      const data = new Date(a.dataAtendimento);
+
+      if (
+        data.getFullYear() === agora.getFullYear() &&
+        data.getMonth() === agora.getMonth()
+      ) {
+        dias.add(data.getDate());
+      }
+    });
+
+    return dias;
+  }, [atendimentos, agora]);
+
+  // Calendário do mês atual, semana começando na segunda-feira
+  const diasDoMes = new Date(
+    agora.getFullYear(),
+    agora.getMonth() + 1,
+    0
+  ).getDate();
+  const deslocamento =
+    (new Date(agora.getFullYear(), agora.getMonth(), 1).getDay() + 6) % 7;
+
+  const calendario: (string | number | null)[] = [
+    "S",
+    "T",
+    "Q",
+    "Q",
+    "S",
+    "S",
+    "D",
+    ...Array.from({ length: deslocamento }, () => null),
+    ...Array.from({ length: diasDoMes }, (_, i) => i + 1),
+  ];
+
   return (
     <div className={styles.container}>
-
       <Sidebar />
 
       <main className={styles.main}>
-
         {/* HEADER */}
         <div className={styles.header}>
           <h1>Agenda</h1>
@@ -31,7 +173,6 @@ export default function Agenda() {
             marginBottom: 20,
           }}
         >
-
           {/* CARDS */}
           <div
             style={{
@@ -39,42 +180,53 @@ export default function Agenda() {
               gap: 20,
             }}
           >
-
             <MiniCard
-              title="Consultas Hoje"
-              value="12"
+              title="Atendimentos Hoje"
+              value={loading ? "-" : atendimentosHoje.length}
               icon={<CalendarDays size={18} />}
             />
 
             <MiniCard
               title="Pendentes"
-              value="4"
+              value={loading ? "-" : pendentesHoje}
               icon={<Clock3 size={18} />}
             />
-
           </div>
 
           {/* BUTTON */}
-          <button
+          <Link
+            href="/agenda/novo"
             style={{
               background: "#2563eb",
               color: "white",
-              border: "none",
               borderRadius: 14,
               padding: "12px 18px",
               display: "flex",
               alignItems: "center",
               gap: 8,
-              cursor: "pointer",
               fontWeight: 600,
               height: "fit-content",
+              textDecoration: "none",
             }}
           >
             <Plus size={18} />
-            Nova Consulta
-          </button>
-
+            Novo Atendimento
+          </Link>
         </div>
+
+        {erro && (
+          <div
+            className={styles.box}
+            style={{ marginBottom: 20, border: "1px solid #fecaca" }}
+          >
+            <strong style={{ color: "#dc2626" }}>
+              Erro ao carregar atendimentos
+            </strong>
+            <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
+              {erro}
+            </p>
+          </div>
+        )}
 
         {/* CONTENT */}
         <div
@@ -84,50 +236,45 @@ export default function Agenda() {
             gap: 20,
           }}
         >
-
-          {/* CONSULTAS */}
+          {/* ATENDIMENTOS */}
           <div className={styles.box}>
-
-            <h3>Consultas de Hoje</h3>
+            <h3>Atendimentos de Hoje</h3>
 
             <div style={{ marginTop: 20 }}>
+              {loading ? (
+                <p style={{ fontSize: 13, color: "#64748b" }}>
+                  Carregando atendimentos...
+                </p>
+              ) : atendimentosHoje.length === 0 ? (
+                <p style={{ fontSize: 13, color: "#64748b" }}>
+                  Nenhum atendimento agendado para hoje.
+                </p>
+              ) : (
+                atendimentosHoje.map((atendimento) => {
+                  const data = new Date(atendimento.dataAtendimento);
 
-              <Appointment
-                hour="08:00"
-                patient="Maria Oliveira"
-                type="Consulta"
-                status="Confirmada"
-              />
-
-              <Appointment
-                hour="10:00"
-                patient="João Santos"
-                type="Retorno"
-                status="Pendente"
-              />
-
-              <Appointment
-                hour="14:00"
-                patient="Ana Costa"
-                type="Avaliação"
-                status="Confirmada"
-              />
-
-              <Appointment
-                hour="16:00"
-                patient="Carlos Lima"
-                type="Consulta"
-                status="Cancelada"
-              />
-
+                  return (
+                    <Appointment
+                      key={atendimento.id}
+                      hour={formatarHora(data)}
+                      patient={atendimento.prontuario.participante.pessoa.nome}
+                      type={
+                        TIPOS[atendimento.tipoAtendimento] ??
+                        atendimento.tipoAtendimento
+                      }
+                      status={data > agora ? "Pendente" : "Realizado"}
+                    />
+                  );
+                })
+              )}
             </div>
-
           </div>
 
           {/* CALENDÁRIO */}
           <div className={styles.box}>
-
-            <h3>Maio 2024</h3>
+            <h3>
+              {MESES[agora.getMonth()]} {agora.getFullYear()}
+            </h3>
 
             <div
               style={{
@@ -138,45 +285,45 @@ export default function Agenda() {
                 textAlign: "center",
               }}
             >
+              {calendario.map((item, index) => {
+                const hoje = item === agora.getDate();
+                const temAtendimento =
+                  typeof item === "number" && diasComAtendimento.has(item);
 
-              {[
-                "S", "T", "Q", "Q", "S", "S", "D",
-                1,2,3,4,5,6,7,
-                8,9,10,11,12,13,14,
-                15,16,17,18,19,20,21,
-                22,23,24,25,26,27,28,
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  style={{
-                    padding: 10,
-                    borderRadius: 10,
-                    background:
-                      item === 24
-                        ? "#2563eb"
-                        : "transparent",
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      padding: 10,
+                      borderRadius: 10,
+                      background: hoje ? "#2563eb" : "transparent",
+                      color: hoje ? "white" : "#0f172a",
+                      fontWeight: typeof item === "number" ? 600 : 400,
+                      position: "relative",
+                    }}
+                  >
+                    {item}
 
-                    color:
-                      item === 24
-                        ? "white"
-                        : "#0f172a",
-
-                    fontWeight:
-                      typeof item === "number"
-                        ? 600
-                        : 400,
-                  }}
-                >
-                  {item}
-                </div>
-              ))}
-
+                    {temAtendimento && (
+                      <span
+                        style={{
+                          position: "absolute",
+                          bottom: 4,
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          background: hoje ? "white" : "#2563eb",
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
-
           </div>
-
         </div>
-
       </main>
     </div>
   );
@@ -186,7 +333,11 @@ function MiniCard({
   title,
   value,
   icon,
-}: Record<string, unknown>) {
+}: {
+  title: string;
+  value: string | number;
+  icon: ReactNode;
+}) {
   return (
     <div
       className={styles.card}
@@ -202,14 +353,10 @@ function MiniCard({
       >
         <p>{title}</p>
 
-        <div className={styles.icon}>
-          {icon}
-        </div>
+        <div className={styles.icon}>{icon}</div>
       </div>
 
-      <h2 style={{ marginTop: 10 }}>
-        {value}
-      </h2>
+      <h2 style={{ marginTop: 10 }}>{value}</h2>
     </div>
   );
 }
@@ -219,7 +366,14 @@ function Appointment({
   patient,
   type,
   status,
-}: Record<string, unknown>) {
+}: {
+  hour: string;
+  patient: string;
+  type: string;
+  status: string;
+}) {
+  const realizado = status === "Realizado";
+
   return (
     <div
       style={{
@@ -230,7 +384,6 @@ function Appointment({
         borderBottom: "1px solid #e2e8f0",
       }}
     >
-
       <div
         style={{
           display: "flex",
@@ -238,7 +391,6 @@ function Appointment({
           gap: 16,
         }}
       >
-
         {/* HOUR */}
         <div
           style={{
@@ -262,7 +414,6 @@ function Appointment({
             gap: 12,
           }}
         >
-
           <div
             style={{
               width: 42,
@@ -290,9 +441,7 @@ function Appointment({
               {type}
             </p>
           </div>
-
         </div>
-
       </div>
 
       {/* STATUS */}
@@ -302,25 +451,16 @@ function Appointment({
           borderRadius: 999,
           fontSize: 12,
           fontWeight: 600,
-
-          background:
-            status === "Confirmada"
-              ? "#dcfce7"
-              : status === "Pendente"
-              ? "#fef9c3"
-              : "#fee2e2",
-
-          color:
-            status === "Confirmada"
-              ? "#16a34a"
-              : status === "Pendente"
-              ? "#ca8a04"
-              : "#dc2626",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          background: realizado ? "#dcfce7" : "#fef9c3",
+          color: realizado ? "#16a34a" : "#ca8a04",
         }}
       >
+        {realizado && <CheckCircle2 size={12} />}
         {status}
       </span>
-
     </div>
   );
 }

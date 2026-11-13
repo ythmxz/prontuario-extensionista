@@ -1,23 +1,137 @@
 "use client";
 
+import { Fragment, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import styles from "../dashboard/dashboard.module.css";
+import { API_URL } from "../common";
 
-import {
-  FileText,
-  Search,
-  Plus,
-  Eye,
-} from "lucide-react";
+import { FileText, Search, Plus, Eye, EyeOff } from "lucide-react";
+
+type AtendimentoResumo = {
+  id: number;
+  dataAtendimento: string;
+  tipoAtendimento: string;
+  motivoConsulta: string;
+};
+
+type Prontuario = {
+  id: number;
+  participanteId: number;
+  numeroProntuario: string;
+  dataAbertura: string;
+  tipoSanguineo?: string | null;
+  alergias?: string | null;
+  obsGerais?: string | null;
+  participante: {
+    pessoa: { nome: string; cpf: string; email?: string | null };
+  };
+  atendimentos: AtendimentoResumo[];
+};
+
+const TIPOS: Record<string, string> = {
+  CONSULTA: "Consulta",
+  TRIAGEM: "Triagem",
+  ORIENTACAO: "Orientação",
+  ACOMPANHAMENTO: "Acompanhamento",
+  OUTRO: "Outro",
+};
+
+function formatarData(data?: string | null) {
+  if (!data) {
+    return "-";
+  }
+
+  const valor = new Date(data);
+
+  return Number.isNaN(valor.getTime())
+    ? data
+    : valor.toLocaleDateString("pt-BR");
+}
+
+function mesmoDia(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
 
 export default function Prontuarios() {
+  const [prontuarios, setProntuarios] = useState<Prontuario[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState("");
+  const [busca, setBusca] = useState("");
+  const [aberto, setAberto] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const response = await fetch(`${API_URL}/prontuarios`, {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Erro ao carregar prontuários: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        setProntuarios(Array.isArray(data) ? data : []);
+      } catch (error) {
+        setErro(
+          error instanceof Error
+            ? error.message
+            : "Não foi possível carregar os prontuários."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregar();
+  }, []);
+
+  const filtrados = useMemo(() => {
+    const termo = busca.trim().toLowerCase();
+
+    if (!termo) {
+      return prontuarios;
+    }
+
+    return prontuarios.filter((p) => {
+      const { nome, cpf, email } = p.participante.pessoa;
+
+      return (
+        nome.toLowerCase().includes(termo) ||
+        cpf.includes(termo) ||
+        (email?.toLowerCase().includes(termo) ?? false) ||
+        p.numeroProntuario.toLowerCase().includes(termo)
+      );
+    });
+  }, [prontuarios, busca]);
+
+  const hoje = new Date();
+
+  const atualizadosHoje = prontuarios.filter((p) =>
+    p.atendimentos.some((a) => mesmoDia(new Date(a.dataAtendimento), hoje))
+  ).length;
+
+  const comAtendimentos = prontuarios.filter(
+    (p) => p.atendimentos.length > 0
+  ).length;
+
+  const semAtendimentos = prontuarios.length - comAtendimentos;
+
+  const valor = (n: number) => (loading ? "-" : n);
+
   return (
     <div className={styles.container}>
-
       <Sidebar />
 
       <main className={styles.main}>
-
         {/* HEADER */}
         <div className={styles.header}>
           <h1>Prontuários</h1>
@@ -26,35 +140,33 @@ export default function Prontuarios() {
 
         {/* CARDS */}
         <div className={styles.cards}>
-
           <TopCard
             title="Prontuários"
-            value="1.284"
+            value={valor(prontuarios.length)}
             icon={<FileText size={18} />}
             color="#2563eb"
           />
 
           <TopCard
             title="Atualizados Hoje"
-            value="18"
+            value={valor(atualizadosHoje)}
             icon={<FileText size={18} />}
             color="#16a34a"
           />
 
           <TopCard
-            title="Pendentes"
-            value="7"
+            title="Com Atendimentos"
+            value={valor(comAtendimentos)}
             icon={<FileText size={18} />}
             color="#ea580c"
           />
 
           <TopCard
-            title="Arquivados"
-            value="312"
+            title="Sem Atendimentos"
+            value={valor(semAtendimentos)}
             icon={<FileText size={18} />}
             color="#9333ea"
           />
-
         </div>
 
         {/* ACTIONS */}
@@ -62,11 +174,11 @@ export default function Prontuarios() {
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             marginTop: 20,
             marginBottom: 20,
           }}
         >
-
           {/* SEARCH */}
           <div
             style={{
@@ -83,6 +195,8 @@ export default function Prontuarios() {
             <Search size={18} color="#64748b" />
 
             <input
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
               placeholder="Buscar prontuário..."
               style={{
                 border: "none",
@@ -94,94 +208,88 @@ export default function Prontuarios() {
           </div>
 
           {/* BUTTON */}
-          <button
+          <Link
+            href="/prontuarios/novo"
             style={{
               background: "#2563eb",
               color: "white",
-              border: "none",
               borderRadius: 14,
               padding: "12px 18px",
               display: "flex",
               alignItems: "center",
               gap: 8,
-              cursor: "pointer",
               fontWeight: 600,
+              textDecoration: "none",
             }}
           >
             <Plus size={18} />
             Novo Prontuário
-          </button>
-
+          </Link>
         </div>
+
+        {erro && (
+          <div
+            className={styles.box}
+            style={{ marginBottom: 20, border: "1px solid #fecaca" }}
+          >
+            <strong style={{ color: "#dc2626" }}>
+              Erro ao carregar prontuários
+            </strong>
+            <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
+              {erro}
+            </p>
+          </div>
+        )}
 
         {/* TABLE */}
         <div className={styles.box}>
+          {loading ? (
+            <p style={{ fontSize: 13, color: "#64748b" }}>
+              Carregando prontuários...
+            </p>
+          ) : filtrados.length === 0 ? (
+            <p style={{ fontSize: 13, color: "#64748b" }}>
+              Nenhum prontuário encontrado.
+            </p>
+          ) : (
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+              }}
+            >
+              <thead>
+                <tr
+                  style={{
+                    textAlign: "left",
+                    color: "#64748b",
+                    fontSize: 14,
+                  }}
+                >
+                  <th style={{ paddingBottom: 20 }}>Paciente</th>
+                  <th>Nº Prontuário</th>
+                  <th>Última Atualização</th>
+                  <th>Tipo Sanguíneo</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
 
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-            }}
-          >
-
-            <thead>
-              <tr
-                style={{
-                  textAlign: "left",
-                  color: "#64748b",
-                  fontSize: 14,
-                }}
-              >
-                <th style={{ paddingBottom: 20 }}>
-                  Paciente
-                </th>
-
-                <th>Última Atualização</th>
-
-                <th>Categoria</th>
-
-                <th>Status</th>
-
-                <th>Ações</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <RecordRow
-                patient="Maria Oliveira"
-                date="20/05/2024"
-                category="Cardiologia"
-                status="Atualizado"
-              />
-
-              <RecordRow
-                patient="João Santos"
-                date="18/05/2024"
-                category="Neurologia"
-                status="Pendente"
-              />
-
-              <RecordRow
-                patient="Ana Costa"
-                date="14/05/2024"
-                category="Ortopedia"
-                status="Arquivado"
-              />
-
-              <RecordRow
-                patient="Carlos Lima"
-                date="10/05/2024"
-                category="Dermatologia"
-                status="Atualizado"
-              />
-
-            </tbody>
-
-          </table>
-
+              <tbody>
+                {filtrados.map((prontuario) => (
+                  <RecordRow
+                    key={prontuario.id}
+                    prontuario={prontuario}
+                    aberto={aberto === prontuario.id}
+                    onToggle={() =>
+                      setAberto(aberto === prontuario.id ? null : prontuario.id)
+                    }
+                  />
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-
       </main>
     </div>
   );
@@ -192,10 +300,14 @@ function TopCard({
   value,
   icon,
   color,
-}: Record<string, unknown>) {
+}: {
+  title: string;
+  value: string | number;
+  icon: ReactNode;
+  color: string;
+}) {
   return (
     <div className={styles.card}>
-
       <div
         style={{
           display: "flex",
@@ -204,134 +316,174 @@ function TopCard({
       >
         <p>{title}</p>
 
-        <div
-          className={styles.icon}
-          style={{
-            color,
-          }}
-        >
+        <div className={styles.icon} style={{ color }}>
           {icon}
         </div>
       </div>
 
-      <h2 style={{ marginTop: 10 }}>
-        {value}
-      </h2>
-
+      <h2 style={{ marginTop: 10 }}>{value}</h2>
     </div>
   );
 }
 
 function RecordRow({
-  patient,
-  date,
-  category,
-  status,
-}: Record<string, unknown>) {
+  prontuario,
+  aberto,
+  onToggle,
+}: {
+  prontuario: Prontuario;
+  aberto: boolean;
+  onToggle: () => void;
+}) {
+  const { pessoa } = prontuario.participante;
+  const ultimo = prontuario.atendimentos[0];
+  const comAtendimentos = prontuario.atendimentos.length > 0;
+
   return (
-    <tr
-      style={{
-        borderTop: "1px solid #e2e8f0",
-      }}
-    >
-
-      <td style={{ padding: "18px 0" }}>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-          }}
-        >
-
+    <Fragment>
+      <tr style={{ borderTop: "1px solid #e2e8f0" }}>
+        <td style={{ padding: "18px 0" }}>
           <div
             style={{
-              width: 42,
-              height: 42,
-              borderRadius: "50%",
-              background: "#dbeafe",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              color: "#2563eb",
-              fontWeight: "bold",
+              gap: 12,
             }}
           >
-            {patient.charAt(0)}
-          </div>
-
-          <div>
-            <strong>{patient}</strong>
-
-            <p
+            <div
               style={{
-                fontSize: 13,
-                color: "#64748b",
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                background: "#dbeafe",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#2563eb",
+                fontWeight: "bold",
               }}
             >
-              paciente@email.com
-            </p>
+              {pessoa.nome.charAt(0)}
+            </div>
+
+            <div>
+              <strong>{pessoa.nome}</strong>
+
+              <p style={{ fontSize: 13, color: "#64748b" }}>
+                {pessoa.email || `CPF: ${pessoa.cpf}`}
+              </p>
+            </div>
           </div>
+        </td>
 
-        </div>
+        <td>{prontuario.numeroProntuario}</td>
 
-      </td>
+        <td>
+          {formatarData(
+            ultimo ? ultimo.dataAtendimento : prontuario.dataAbertura
+          )}
+        </td>
 
-      <td>{date}</td>
+        <td>{prontuario.tipoSanguineo || "-"}</td>
 
-      <td>{category}</td>
+        <td>
+          <span
+            style={{
+              padding: "6px 12px",
+              borderRadius: 999,
+              fontSize: 12,
+              fontWeight: 600,
+              background: comAtendimentos ? "#dcfce7" : "#fef9c3",
+              color: comAtendimentos ? "#16a34a" : "#ca8a04",
+            }}
+          >
+            {comAtendimentos
+              ? `${prontuario.atendimentos.length} ${
+                  prontuario.atendimentos.length === 1
+                    ? "atendimento"
+                    : "atendimentos"
+                }`
+              : "Sem atendimentos"}
+          </span>
+        </td>
 
-      <td>
+        <td>
+          <button
+            onClick={onToggle}
+            style={{
+              border: "none",
+              background: "#eff6ff",
+              color: "#2563eb",
+              padding: "8px 14px",
+              borderRadius: 10,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            {aberto ? <EyeOff size={16} /> : <Eye size={16} />}
+            {aberto ? "Ocultar" : "Visualizar"}
+          </button>
+        </td>
+      </tr>
 
-        <span
-          style={{
-            padding: "6px 12px",
-            borderRadius: 999,
-            fontSize: 12,
-            fontWeight: 600,
+      {aberto && (
+        <tr>
+          <td colSpan={6} style={{ paddingBottom: 18 }}>
+            <div
+              style={{
+                background: "#f8fafc",
+                borderRadius: 12,
+                padding: 16,
+                fontSize: 14,
+                lineHeight: 1.6,
+              }}
+            >
+              <div>
+                <strong>Abertura:</strong> {formatarData(prontuario.dataAbertura)}
+              </div>
+              <div>
+                <strong>CPF:</strong> {pessoa.cpf}
+              </div>
+              <div>
+                <strong>Alergias:</strong> {prontuario.alergias || "Não informadas"}
+              </div>
+              <div>
+                <strong>Observações gerais:</strong>{" "}
+                {prontuario.obsGerais || "Nenhuma"}
+              </div>
 
-            background:
-              status === "Atualizado"
-                ? "#dcfce7"
-                : status === "Pendente"
-                ? "#fef9c3"
-                : "#ede9fe",
+              <h4 style={{ marginTop: 14, marginBottom: 8, color: "#64748b" }}>
+                Histórico de atendimentos
+              </h4>
 
-            color:
-              status === "Atualizado"
-                ? "#16a34a"
-                : status === "Pendente"
-                ? "#ca8a04"
-                : "#7c3aed",
-          }}
-        >
-          {status}
-        </span>
-
-      </td>
-
-      <td>
-
-        <button
-          style={{
-            border: "none",
-            background: "#eff6ff",
-            color: "#2563eb",
-            padding: "8px 14px",
-            borderRadius: 10,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-        >
-          <Eye size={16} />
-          Visualizar
-        </button>
-
-      </td>
-
-    </tr>
+              {comAtendimentos ? (
+                prontuario.atendimentos.map((a) => (
+                  <div
+                    key={a.id}
+                    style={{
+                      borderTop: "1px solid #e2e8f0",
+                      paddingTop: 8,
+                      marginTop: 8,
+                    }}
+                  >
+                    <strong>
+                      {formatarData(a.dataAtendimento)} —{" "}
+                      {TIPOS[a.tipoAtendimento] ?? a.tipoAtendimento}
+                    </strong>
+                    <div style={{ color: "#64748b" }}>{a.motivoConsulta}</div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ color: "#64748b" }}>
+                  Nenhum atendimento registrado.
+                </div>
+              )}
+            </div>
+          </td>
+        </tr>
+      )}
+    </Fragment>
   );
 }

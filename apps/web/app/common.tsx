@@ -17,7 +17,7 @@ export function logOut(): void {
   localStorage.setItem("token", "");
   const router = useRouter();
   router.replace(`/login`);
-  // TODO: por que que não tá funcionando?
+  // TODO: por que que não tá funcionando? ...
 }
 
 export function getWithAuth(url: string): Promise<Response> {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, ReactNode } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Home,
   FileText,
@@ -18,6 +19,7 @@ import { API_URL, getWithAuth, logOut } from "@/app/common";
  * Barra de navegação lateral do aplicativo. Contém as rotas principais e algumas informações sobre a conta.
  */
 export default function Sidebar() {
+  const pathname = usePathname();
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
@@ -70,15 +72,19 @@ export default function Sidebar() {
         </div>
 
         <ul className={styles.menu}>
-          {items.map(i => (
-            <Link href={i.href ?? ""} onClick={i.onClick} key={i.title}>
-              <li>
-                {i.icon}
-                {i.title}
-              </li>
-            </Link>
-          ))}
+          {items.map((i) => {
+            const isActive =
+              pathname === i.href || (pathname && pathname.startsWith(`${i.href}/`));
 
+            return (
+              <Link href={i.href ?? ""} onClick={i.onClick} key={i.title}>
+                <li className={isActive ? styles.active : undefined}>
+                  {i.icon}
+                  {i.title}
+                </li>
+              </Link>
+            );
+          })}
         </ul>
       </div>
 
