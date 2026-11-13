@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyReply } from "fastify";
 import { Prisma } from "../generated/prisma/client.ts";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
 export type FieldType = "string" | "number";
 
@@ -357,3 +358,12 @@ export const trimmedStringFieldConfig: FieldConfig = {
   type: "string",
   process: (x: any): any => String(x).trim(),
 };
+
+export async function requireAuth(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    await request.jwtVerify();
+  } catch (error) {
+    request.log.error(error, "Falha ao validar JWT");
+    return reply.status(401).send({ message: "Token inválido ou expirado." });
+  }
+}

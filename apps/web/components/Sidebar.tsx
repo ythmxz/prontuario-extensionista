@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "../app/dashboard/dashboard.module.css";
-
 import {
   Home,
   FileText,
@@ -11,8 +11,38 @@ import {
   User,
   Settings,
 } from "lucide-react";
+import { API_URL } from "../app/common";
+
+function getWithAuth(url: string): Promise<Response> {
+  const token = localStorage.getItem("token");
+  // TODO: verificar se tem o token mesmo
+  const headers = { Authorization: `Bearer ${token}` };
+  return fetch(url, { headers });
+}
 
 export default function Sidebar() {
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const response = await getWithAuth(`${API_URL}/auth/info`);
+
+        if (!response.ok) {
+          console.log("TODO: handle error");
+          return;
+        }
+
+        const json = await response.json();
+        setUserName(json.name);
+      } catch (error) {
+        console.log("TODO: handle error");
+      }
+    }
+
+    loadData();
+  }, []);
+
   return (
     <aside className={styles.sidebar}>
 
@@ -73,9 +103,9 @@ export default function Sidebar() {
         <div className={styles.avatar}>N</div>
 
         <div>
-          <strong>João Silva</strong>
+          <strong>{userName}</strong>
           <p style={{ fontSize: 12 }}>
-            Administrador
+            Usuário
           </p>
         </div>
       </div>

@@ -2,6 +2,16 @@ import { FastifyInstance } from "fastify";
 import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma.ts";
 import jwt from "@fastify/jwt";
+import { requireAuth } from "./common.ts";
+
+const userSelect = {
+  id: true,
+  name: true,
+  email: true,
+  cpf: true,
+  phone: true,
+  passwordHash: true,
+};
 
 export async function authRoutes(app: FastifyInstance) {
   await app.register(jwt, {
@@ -22,14 +32,7 @@ export async function authRoutes(app: FastifyInstance) {
 
     const user = await prisma.user.findUnique({
       where: { email },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        cpf: true,
-        phone: true,
-        passwordHash: true,
-      },
+      select: userSelect,
     });
 
     const authFailReply = () => reply.status(401).send({ message: "Credenciais invalidas." });
@@ -48,5 +51,24 @@ export async function authRoutes(app: FastifyInstance) {
     );
 
     return reply.send({ token, user: safeUser });
+  });
+
+  app.get("/auth/info", { preHandler: requireAuth }, async (request, reply) => {
+    const payload = request.user as { sub?: string };
+
+    if (!payload.sub) {
+      return reply.status(401).send({ message: "Token inválido." });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: payload.sub },
+      select: userSelect,
+    });
+
+    if (!user) {
+      return reply.status(401).send({ message: "Usuário não encontrado." });
+    }
+
+    return reply.send(user);
   });
 }

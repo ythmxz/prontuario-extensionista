@@ -66,6 +66,7 @@ export default function LoginPage() {
         return;
       }
 
+      // TODO: conselho do gpt: "Em produção, prefira guardar o token em cookie HttpOnly, Secure e SameSite, em vez de localStorage; assim, o JavaScript da página não consegue ler o token."
       localStorage.setItem("token", data.token);
       setStatus("success");
       setMessage("Entrou!");
