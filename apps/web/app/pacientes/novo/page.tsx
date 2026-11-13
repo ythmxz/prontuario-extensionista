@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import styles from "../../dashboard/dashboard.module.css";
 import { API_URL } from "../../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 const inputStyle: CSSProperties = {
   width: "100%",
@@ -171,290 +172,292 @@ export default function NovoPacientePage() {
   }
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
+    <ProtectedArea>
+      <div className={styles.container}>
+        <Sidebar />
 
-      <main className={styles.main}>
-        <Link
-          href="/pacientes"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            color: "#2563eb",
-            textDecoration: "none",
-            fontWeight: 600,
-            fontSize: 14,
-          }}
-        >
-          <ArrowLeft size={16} />
-          Voltar para pacientes
-        </Link>
-
-        <div className={styles.header} style={{ marginTop: 16 }}>
-          <h1>Novo Paciente</h1>
-          <p>Preencha os dados abaixo para cadastrar um novo paciente.</p>
-        </div>
-
-        {erro && (
-          <div
+        <main className={styles.main}>
+          <Link
+            href="/pacientes"
             style={{
-              marginTop: 20,
-              padding: 14,
-              borderRadius: 12,
-              background: "#fee2e2",
-              color: "#dc2626",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              color: "#2563eb",
+              textDecoration: "none",
+              fontWeight: 600,
               fontSize: 14,
             }}
           >
-            <strong>Erro: </strong>
-            {erro}
-          </div>
-        )}
+            <ArrowLeft size={16} />
+            Voltar para pacientes
+          </Link>
 
-        {sucesso && (
-          <div
-            style={{
-              marginTop: 20,
-              padding: 14,
-              borderRadius: 12,
-              background: "#dcfce7",
-              color: "#16a34a",
-              fontSize: 14,
-            }}
+          <div className={styles.header} style={{ marginTop: 16 }}>
+            <h1>Novo Paciente</h1>
+            <p>Preencha os dados abaixo para cadastrar um novo paciente.</p>
+          </div>
+
+          {erro && (
+            <div
+              style={{
+                marginTop: 20,
+                padding: 14,
+                borderRadius: 12,
+                background: "#fee2e2",
+                color: "#dc2626",
+                fontSize: 14,
+              }}
+            >
+              <strong>Erro: </strong>
+              {erro}
+            </div>
+          )}
+
+          {sucesso && (
+            <div
+              style={{
+                marginTop: 20,
+                padding: 14,
+                borderRadius: 12,
+                background: "#dcfce7",
+                color: "#16a34a",
+                fontSize: 14,
+              }}
+            >
+              Paciente cadastrado com sucesso! Redirecionando...
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit}
+            className={styles.box}
+            style={{ marginTop: 20, maxWidth: 800 }}
           >
-            Paciente cadastrado com sucesso! Redirecionando...
-          </div>
-        )}
+            <Titulo>Dados pessoais</Titulo>
 
-        <form
-          onSubmit={handleSubmit}
-          className={styles.box}
-          style={{ marginTop: 20, maxWidth: 800 }}
-        >
-          <Titulo>Dados pessoais</Titulo>
+            <div style={{ marginBottom: 18 }}>
+              <Campo label="Nome completo *" htmlFor="nome">
+                <input
+                  id="nome"
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  placeholder="Ex.: Maria Oliveira"
+                  maxLength={200}
+                  required
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
 
-          <div style={{ marginBottom: 18 }}>
-            <Campo label="Nome completo *" htmlFor="nome">
-              <input
-                id="nome"
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Ex.: Maria Oliveira"
-                maxLength={200}
-                required
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
+            <div style={grid}>
+              <Campo label="CPF *" htmlFor="cpf">
+                <input
+                  id="cpf"
+                  type="text"
+                  inputMode="numeric"
+                  value={cpf}
+                  onChange={(e) => setCpf(e.target.value)}
+                  placeholder="Somente números"
+                  maxLength={14}
+                  required
+                  style={inputStyle}
+                />
+              </Campo>
 
-          <div style={grid}>
-            <Campo label="CPF *" htmlFor="cpf">
-              <input
-                id="cpf"
-                type="text"
-                inputMode="numeric"
-                value={cpf}
-                onChange={(e) => setCpf(e.target.value)}
-                placeholder="Somente números"
-                maxLength={14}
-                required
-                style={inputStyle}
-              />
-            </Campo>
+              <Campo label="Data de nascimento *" htmlFor="dataNascimento">
+                <input
+                  id="dataNascimento"
+                  type="date"
+                  value={dataNascimento}
+                  onChange={(e) => setDataNascimento(e.target.value)}
+                  required
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
 
-            <Campo label="Data de nascimento *" htmlFor="dataNascimento">
-              <input
-                id="dataNascimento"
-                type="date"
-                value={dataNascimento}
-                onChange={(e) => setDataNascimento(e.target.value)}
-                required
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
+            <div style={grid}>
+              <Campo label="Sexo *" htmlFor="sexo">
+                <select
+                  id="sexo"
+                  value={sexo}
+                  onChange={(e) => setSexo(e.target.value)}
+                  required
+                  style={inputStyle}
+                >
+                  <option value="">Selecione o sexo</option>
+                  <option value="F">Feminino</option>
+                  <option value="M">Masculino</option>
+                  <option value="OUTRO">Outro</option>
+                </select>
+              </Campo>
 
-          <div style={grid}>
-            <Campo label="Sexo *" htmlFor="sexo">
-              <select
-                id="sexo"
-                value={sexo}
-                onChange={(e) => setSexo(e.target.value)}
-                required
-                style={inputStyle}
+              <Campo label="Escolaridade" htmlFor="escolaridade">
+                <input
+                  id="escolaridade"
+                  type="text"
+                  value={escolaridade}
+                  onChange={(e) => setEscolaridade(e.target.value)}
+                  placeholder="Ex.: Ensino médio completo"
+                  maxLength={80}
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
+
+            <Titulo>Contato e endereço</Titulo>
+
+            <div style={grid}>
+              <Campo label="Telefone" htmlFor="telefone">
+                <input
+                  id="telefone"
+                  type="tel"
+                  value={telefone}
+                  onChange={(e) => setTelefone(e.target.value)}
+                  placeholder="(00) 00000-0000"
+                  maxLength={20}
+                  style={inputStyle}
+                />
+              </Campo>
+
+              <Campo label="E-mail" htmlFor="email">
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="paciente@email.com"
+                  maxLength={150}
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <Campo label="Endereço" htmlFor="endereco">
+                <input
+                  id="endereco"
+                  type="text"
+                  value={endereco}
+                  onChange={(e) => setEndereco(e.target.value)}
+                  placeholder="Rua, número, bairro"
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "3fr 1fr",
+                gap: 16,
+                marginBottom: 18,
+              }}
+            >
+              <Campo label="Município" htmlFor="municipio">
+                <input
+                  id="municipio"
+                  type="text"
+                  value={municipio}
+                  onChange={(e) => setMunicipio(e.target.value)}
+                  maxLength={100}
+                  style={inputStyle}
+                />
+              </Campo>
+
+              <Campo label="UF" htmlFor="uf">
+                <input
+                  id="uf"
+                  type="text"
+                  value={uf}
+                  onChange={(e) => setUf(e.target.value.toUpperCase())}
+                  placeholder="UF"
+                  maxLength={2}
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
+
+            <Titulo>Responsável</Titulo>
+
+            <div style={grid}>
+              <Campo label="Nome do responsável" htmlFor="nomeResponsavel">
+                <input
+                  id="nomeResponsavel"
+                  type="text"
+                  value={nomeResponsavel}
+                  onChange={(e) => setNomeResponsavel(e.target.value)}
+                  maxLength={200}
+                  style={inputStyle}
+                />
+              </Campo>
+
+              <Campo label="Telefone do responsável" htmlFor="telResponsavel">
+                <input
+                  id="telResponsavel"
+                  type="tel"
+                  value={telResponsavel}
+                  onChange={(e) => setTelResponsavel(e.target.value)}
+                  maxLength={20}
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
+
+            <div style={{ marginBottom: 24 }}>
+              <Campo label="Observações" htmlFor="observacoes">
+                <textarea
+                  id="observacoes"
+                  value={observacoes}
+                  onChange={(e) => setObservacoes(e.target.value)}
+                  rows={4}
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </Campo>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 12,
+              }}
+            >
+              <Link
+                href="/pacientes"
+                style={{
+                  padding: "12px 18px",
+                  borderRadius: 14,
+                  background: "#eff6ff",
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                }}
               >
-                <option value="">Selecione o sexo</option>
-                <option value="F">Feminino</option>
-                <option value="M">Masculino</option>
-                <option value="OUTRO">Outro</option>
-              </select>
-            </Campo>
+                Cancelar
+              </Link>
 
-            <Campo label="Escolaridade" htmlFor="escolaridade">
-              <input
-                id="escolaridade"
-                type="text"
-                value={escolaridade}
-                onChange={(e) => setEscolaridade(e.target.value)}
-                placeholder="Ex.: Ensino médio completo"
-                maxLength={80}
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
-
-          <Titulo>Contato e endereço</Titulo>
-
-          <div style={grid}>
-            <Campo label="Telefone" htmlFor="telefone">
-              <input
-                id="telefone"
-                type="tel"
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
-                placeholder="(00) 00000-0000"
-                maxLength={20}
-                style={inputStyle}
-              />
-            </Campo>
-
-            <Campo label="E-mail" htmlFor="email">
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="paciente@email.com"
-                maxLength={150}
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
-
-          <div style={{ marginBottom: 18 }}>
-            <Campo label="Endereço" htmlFor="endereco">
-              <input
-                id="endereco"
-                type="text"
-                value={endereco}
-                onChange={(e) => setEndereco(e.target.value)}
-                placeholder="Rua, número, bairro"
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "3fr 1fr",
-              gap: 16,
-              marginBottom: 18,
-            }}
-          >
-            <Campo label="Município" htmlFor="municipio">
-              <input
-                id="municipio"
-                type="text"
-                value={municipio}
-                onChange={(e) => setMunicipio(e.target.value)}
-                maxLength={100}
-                style={inputStyle}
-              />
-            </Campo>
-
-            <Campo label="UF" htmlFor="uf">
-              <input
-                id="uf"
-                type="text"
-                value={uf}
-                onChange={(e) => setUf(e.target.value.toUpperCase())}
-                placeholder="UF"
-                maxLength={2}
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
-
-          <Titulo>Responsável</Titulo>
-
-          <div style={grid}>
-            <Campo label="Nome do responsável" htmlFor="nomeResponsavel">
-              <input
-                id="nomeResponsavel"
-                type="text"
-                value={nomeResponsavel}
-                onChange={(e) => setNomeResponsavel(e.target.value)}
-                maxLength={200}
-                style={inputStyle}
-              />
-            </Campo>
-
-            <Campo label="Telefone do responsável" htmlFor="telResponsavel">
-              <input
-                id="telResponsavel"
-                type="tel"
-                value={telResponsavel}
-                onChange={(e) => setTelResponsavel(e.target.value)}
-                maxLength={20}
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
-
-          <div style={{ marginBottom: 24 }}>
-            <Campo label="Observações" htmlFor="observacoes">
-              <textarea
-                id="observacoes"
-                value={observacoes}
-                onChange={(e) => setObservacoes(e.target.value)}
-                rows={4}
-                style={{ ...inputStyle, resize: "vertical" }}
-              />
-            </Campo>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 12,
-            }}
-          >
-            <Link
-              href="/pacientes"
-              style={{
-                padding: "12px 18px",
-                borderRadius: 14,
-                background: "#eff6ff",
-                color: "#2563eb",
-                textDecoration: "none",
-                fontWeight: 600,
-              }}
-            >
-              Cancelar
-            </Link>
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                background: loading ? "#93c5fd" : "#2563eb",
-                color: "white",
-                border: "none",
-                borderRadius: 14,
-                padding: "12px 18px",
-                fontWeight: 600,
-                cursor: loading ? "not-allowed" : "pointer",
-              }}
-            >
-              {loading ? "Cadastrando..." : "Cadastrar Paciente"}
-            </button>
-          </div>
-        </form>
-      </main>
-    </div>
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  background: loading ? "#93c5fd" : "#2563eb",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 14,
+                  padding: "12px 18px",
+                  fontWeight: 600,
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+              >
+                {loading ? "Cadastrando..." : "Cadastrar Paciente"}
+              </button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </ProtectedArea>
   );
 }

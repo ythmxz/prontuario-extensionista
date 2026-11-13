@@ -6,6 +6,7 @@ import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import styles from "../dashboard/dashboard.module.css";
 import { API_URL } from "../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 import { FileText, Search, Plus, Eye, EyeOff } from "lucide-react";
 
@@ -128,170 +129,172 @@ export default function Prontuarios() {
   const valor = (n: number) => (loading ? "-" : n);
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
+    <ProtectedArea>
+      <div className={styles.container}>
+        <Sidebar />
 
-      <main className={styles.main}>
-        {/* HEADER */}
-        <div className={styles.header}>
-          <h1>Prontuários</h1>
-          <p>Acompanhe registros e históricos de atendimento</p>
-        </div>
+        <main className={styles.main}>
+          {/* HEADER */}
+          <div className={styles.header}>
+            <h1>Prontuários</h1>
+            <p>Acompanhe registros e históricos de atendimento</p>
+          </div>
 
-        {/* CARDS */}
-        <div className={styles.cards}>
-          <TopCard
-            title="Prontuários"
-            value={valor(prontuarios.length)}
-            icon={<FileText size={18} />}
-            color="#2563eb"
-          />
+          {/* CARDS */}
+          <div className={styles.cards}>
+            <TopCard
+              title="Prontuários"
+              value={valor(prontuarios.length)}
+              icon={<FileText size={18} />}
+              color="#2563eb"
+            />
 
-          <TopCard
-            title="Atualizados Hoje"
-            value={valor(atualizadosHoje)}
-            icon={<FileText size={18} />}
-            color="#16a34a"
-          />
+            <TopCard
+              title="Atualizados Hoje"
+              value={valor(atualizadosHoje)}
+              icon={<FileText size={18} />}
+              color="#16a34a"
+            />
 
-          <TopCard
-            title="Com Atendimentos"
-            value={valor(comAtendimentos)}
-            icon={<FileText size={18} />}
-            color="#ea580c"
-          />
+            <TopCard
+              title="Com Atendimentos"
+              value={valor(comAtendimentos)}
+              icon={<FileText size={18} />}
+              color="#ea580c"
+            />
 
-          <TopCard
-            title="Sem Atendimentos"
-            value={valor(semAtendimentos)}
-            icon={<FileText size={18} />}
-            color="#9333ea"
-          />
-        </div>
-
-        {/* ACTIONS */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: 20,
-            marginBottom: 20,
-          }}
-        >
-          {/* SEARCH */}
-          <div
-            style={{
-              background: "white",
-              padding: "12px 18px",
-              borderRadius: 14,
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              width: 320,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-            }}
-          >
-            <Search size={18} color="#64748b" />
-
-            <input
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              placeholder="Buscar prontuário..."
-              style={{
-                border: "none",
-                outline: "none",
-                width: "100%",
-                fontSize: 14,
-              }}
+            <TopCard
+              title="Sem Atendimentos"
+              value={valor(semAtendimentos)}
+              icon={<FileText size={18} />}
+              color="#9333ea"
             />
           </div>
 
-          {/* BUTTON */}
-          <Link
-            href="/prontuarios/novo"
+          {/* ACTIONS */}
+          <div
             style={{
-              background: "#2563eb",
-              color: "white",
-              borderRadius: 14,
-              padding: "12px 18px",
               display: "flex",
+              justifyContent: "space-between",
               alignItems: "center",
-              gap: 8,
-              fontWeight: 600,
-              textDecoration: "none",
+              marginTop: 20,
+              marginBottom: 20,
             }}
           >
-            <Plus size={18} />
-            Novo Prontuário
-          </Link>
-        </div>
-
-        {erro && (
-          <div
-            className={styles.box}
-            style={{ marginBottom: 20, border: "1px solid #fecaca" }}
-          >
-            <strong style={{ color: "#dc2626" }}>
-              Erro ao carregar prontuários
-            </strong>
-            <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
-              {erro}
-            </p>
-          </div>
-        )}
-
-        {/* TABLE */}
-        <div className={styles.box}>
-          {loading ? (
-            <p style={{ fontSize: 13, color: "#64748b" }}>
-              Carregando prontuários...
-            </p>
-          ) : filtrados.length === 0 ? (
-            <p style={{ fontSize: 13, color: "#64748b" }}>
-              Nenhum prontuário encontrado.
-            </p>
-          ) : (
-            <table
+            {/* SEARCH */}
+            <div
               style={{
-                width: "100%",
-                borderCollapse: "collapse",
+                background: "white",
+                padding: "12px 18px",
+                borderRadius: 14,
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                width: 320,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               }}
             >
-              <thead>
-                <tr
-                  style={{
-                    textAlign: "left",
-                    color: "#64748b",
-                    fontSize: 14,
-                  }}
-                >
-                  <th style={{ paddingBottom: 20 }}>Paciente</th>
-                  <th>Nº Prontuário</th>
-                  <th>Última Atualização</th>
-                  <th>Tipo Sanguíneo</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
+              <Search size={18} color="#64748b" />
 
-              <tbody>
-                {filtrados.map((prontuario) => (
-                  <RecordRow
-                    key={prontuario.id}
-                    prontuario={prontuario}
-                    aberto={aberto === prontuario.id}
-                    onToggle={() =>
-                      setAberto(aberto === prontuario.id ? null : prontuario.id)
-                    }
-                  />
-                ))}
-              </tbody>
-            </table>
+              <input
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+                placeholder="Buscar prontuário..."
+                style={{
+                  border: "none",
+                  outline: "none",
+                  width: "100%",
+                  fontSize: 14,
+                }}
+              />
+            </div>
+
+            {/* BUTTON */}
+            <Link
+              href="/prontuarios/novo"
+              style={{
+                background: "#2563eb",
+                color: "white",
+                borderRadius: 14,
+                padding: "12px 18px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                fontWeight: 600,
+                textDecoration: "none",
+              }}
+            >
+              <Plus size={18} />
+              Novo Prontuário
+            </Link>
+          </div>
+
+          {erro && (
+            <div
+              className={styles.box}
+              style={{ marginBottom: 20, border: "1px solid #fecaca" }}
+            >
+              <strong style={{ color: "#dc2626" }}>
+                Erro ao carregar prontuários
+              </strong>
+              <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
+                {erro}
+              </p>
+            </div>
           )}
-        </div>
-      </main>
-    </div>
+
+          {/* TABLE */}
+          <div className={styles.box}>
+            {loading ? (
+              <p style={{ fontSize: 13, color: "#64748b" }}>
+                Carregando prontuários...
+              </p>
+            ) : filtrados.length === 0 ? (
+              <p style={{ fontSize: 13, color: "#64748b" }}>
+                Nenhum prontuário encontrado.
+              </p>
+            ) : (
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                }}
+              >
+                <thead>
+                  <tr
+                    style={{
+                      textAlign: "left",
+                      color: "#64748b",
+                      fontSize: 14,
+                    }}
+                  >
+                    <th style={{ paddingBottom: 20 }}>Paciente</th>
+                    <th>Nº Prontuário</th>
+                    <th>Última Atualização</th>
+                    <th>Tipo Sanguíneo</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filtrados.map((prontuario) => (
+                    <RecordRow
+                      key={prontuario.id}
+                      prontuario={prontuario}
+                      aberto={aberto === prontuario.id}
+                      onToggle={() =>
+                        setAberto(aberto === prontuario.id ? null : prontuario.id)
+                      }
+                    />
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </main>
+      </div>
+    </ProtectedArea>
   );
 }
 

@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import styles from "../../dashboard/dashboard.module.css";
 import { API_URL } from "../../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 type PacienteOpcao = {
   id: number;
@@ -172,200 +173,202 @@ export default function NovoProntuarioPage() {
   }
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
+    <ProtectedArea>
+      <div className={styles.container}>
+        <Sidebar />
 
-      <main className={styles.main}>
-        <Link
-          href="/prontuarios"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            color: "#2563eb",
-            textDecoration: "none",
-            fontWeight: 600,
-            fontSize: 14,
-          }}
-        >
-          <ArrowLeft size={16} />
-          Voltar para prontuários
-        </Link>
-
-        <div className={styles.header} style={{ marginTop: 16 }}>
-          <h1>Novo Prontuário</h1>
-          <p>Preencha os dados abaixo para abrir um novo prontuário.</p>
-        </div>
-
-        {erro && (
-          <div
+        <main className={styles.main}>
+          <Link
+            href="/prontuarios"
             style={{
-              marginTop: 20,
-              padding: 14,
-              borderRadius: 12,
-              background: "#fee2e2",
-              color: "#dc2626",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              color: "#2563eb",
+              textDecoration: "none",
+              fontWeight: 600,
               fontSize: 14,
             }}
           >
-            <strong>Erro: </strong>
-            {erro}
-          </div>
-        )}
+            <ArrowLeft size={16} />
+            Voltar para prontuários
+          </Link>
 
-        {sucesso && (
-          <div
-            style={{
-              marginTop: 20,
-              padding: 14,
-              borderRadius: 12,
-              background: "#dcfce7",
-              color: "#16a34a",
-              fontSize: 14,
-            }}
+          <div className={styles.header} style={{ marginTop: 16 }}>
+            <h1>Novo Prontuário</h1>
+            <p>Preencha os dados abaixo para abrir um novo prontuário.</p>
+          </div>
+
+          {erro && (
+            <div
+              style={{
+                marginTop: 20,
+                padding: 14,
+                borderRadius: 12,
+                background: "#fee2e2",
+                color: "#dc2626",
+                fontSize: 14,
+              }}
+            >
+              <strong>Erro: </strong>
+              {erro}
+            </div>
+          )}
+
+          {sucesso && (
+            <div
+              style={{
+                marginTop: 20,
+                padding: 14,
+                borderRadius: 12,
+                background: "#dcfce7",
+                color: "#16a34a",
+                fontSize: 14,
+              }}
+            >
+              Prontuário cadastrado com sucesso! Redirecionando...
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit}
+            className={styles.box}
+            style={{ marginTop: 20, maxWidth: 800 }}
           >
-            Prontuário cadastrado com sucesso! Redirecionando...
-          </div>
-        )}
-
-        <form
-          onSubmit={handleSubmit}
-          className={styles.box}
-          style={{ marginTop: 20, maxWidth: 800 }}
-        >
-          <div style={{ marginBottom: 18 }}>
-            <Campo label="Paciente *" htmlFor="paciente">
-              <select
-                id="paciente"
-                value={participanteId}
-                onChange={(e) => setParticipanteId(e.target.value)}
-                disabled={carregando}
-                required
-                style={inputStyle}
-              >
-                <option value="">
-                  {carregando
-                    ? "Carregando..."
-                    : pacientes.length === 0
-                    ? "Todos os pacientes já possuem prontuário"
-                    : "Selecione o paciente"}
-                </option>
-                {pacientes.map((paciente) => (
-                  <option key={paciente.id} value={paciente.id}>
-                    {paciente.pessoa.nome} — {paciente.pessoa.cpf}
+            <div style={{ marginBottom: 18 }}>
+              <Campo label="Paciente *" htmlFor="paciente">
+                <select
+                  id="paciente"
+                  value={participanteId}
+                  onChange={(e) => setParticipanteId(e.target.value)}
+                  disabled={carregando}
+                  required
+                  style={inputStyle}
+                >
+                  <option value="">
+                    {carregando
+                      ? "Carregando..."
+                      : pacientes.length === 0
+                      ? "Todos os pacientes já possuem prontuário"
+                      : "Selecione o paciente"}
                   </option>
-                ))}
-              </select>
-            </Campo>
-          </div>
-
-          <div style={grid}>
-            <Campo label="Número do prontuário" htmlFor="numeroProntuario">
-              <input
-                id="numeroProntuario"
-                type="text"
-                value={numeroProntuario}
-                onChange={(e) => setNumeroProntuario(e.target.value)}
-                placeholder="Gerado automaticamente se vazio"
-                maxLength={30}
-                style={inputStyle}
-              />
-            </Campo>
-
-            <Campo label="Data de abertura" htmlFor="dataAbertura">
-              <input
-                id="dataAbertura"
-                type="date"
-                value={dataAbertura}
-                onChange={(e) => setDataAbertura(e.target.value)}
-                style={inputStyle}
-              />
-            </Campo>
-          </div>
-
-          <div style={{ marginBottom: 18 }}>
-            <Campo label="Tipo sanguíneo" htmlFor="tipoSanguineo">
-              <select
-                id="tipoSanguineo"
-                value={tipoSanguineo}
-                onChange={(e) => setTipoSanguineo(e.target.value)}
-                style={inputStyle}
-              >
-                <option value="">Não informado</option>
-                {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
-                  (tipo) => (
-                    <option key={tipo} value={tipo}>
-                      {tipo}
+                  {pacientes.map((paciente) => (
+                    <option key={paciente.id} value={paciente.id}>
+                      {paciente.pessoa.nome} — {paciente.pessoa.cpf}
                     </option>
-                  )
-                )}
-              </select>
-            </Campo>
-          </div>
+                  ))}
+                </select>
+              </Campo>
+            </div>
 
-          <div style={{ marginBottom: 18 }}>
-            <Campo label="Alergias" htmlFor="alergias">
-              <textarea
-                id="alergias"
-                value={alergias}
-                onChange={(e) => setAlergias(e.target.value)}
-                rows={3}
-                style={{ ...inputStyle, resize: "vertical" }}
-              />
-            </Campo>
-          </div>
+            <div style={grid}>
+              <Campo label="Número do prontuário" htmlFor="numeroProntuario">
+                <input
+                  id="numeroProntuario"
+                  type="text"
+                  value={numeroProntuario}
+                  onChange={(e) => setNumeroProntuario(e.target.value)}
+                  placeholder="Gerado automaticamente se vazio"
+                  maxLength={30}
+                  style={inputStyle}
+                />
+              </Campo>
 
-          <div style={{ marginBottom: 24 }}>
-            <Campo label="Observações gerais" htmlFor="obsGerais">
-              <textarea
-                id="obsGerais"
-                value={obsGerais}
-                onChange={(e) => setObsGerais(e.target.value)}
-                rows={4}
-                style={{ ...inputStyle, resize: "vertical" }}
-              />
-            </Campo>
-          </div>
+              <Campo label="Data de abertura" htmlFor="dataAbertura">
+                <input
+                  id="dataAbertura"
+                  type="date"
+                  value={dataAbertura}
+                  onChange={(e) => setDataAbertura(e.target.value)}
+                  style={inputStyle}
+                />
+              </Campo>
+            </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 12,
-            }}
-          >
-            <Link
-              href="/prontuarios"
+            <div style={{ marginBottom: 18 }}>
+              <Campo label="Tipo sanguíneo" htmlFor="tipoSanguineo">
+                <select
+                  id="tipoSanguineo"
+                  value={tipoSanguineo}
+                  onChange={(e) => setTipoSanguineo(e.target.value)}
+                  style={inputStyle}
+                >
+                  <option value="">Não informado</option>
+                  {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+                    (tipo) => (
+                      <option key={tipo} value={tipo}>
+                        {tipo}
+                      </option>
+                    )
+                  )}
+                </select>
+              </Campo>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <Campo label="Alergias" htmlFor="alergias">
+                <textarea
+                  id="alergias"
+                  value={alergias}
+                  onChange={(e) => setAlergias(e.target.value)}
+                  rows={3}
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </Campo>
+            </div>
+
+            <div style={{ marginBottom: 24 }}>
+              <Campo label="Observações gerais" htmlFor="obsGerais">
+                <textarea
+                  id="obsGerais"
+                  value={obsGerais}
+                  onChange={(e) => setObsGerais(e.target.value)}
+                  rows={4}
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </Campo>
+            </div>
+
+            <div
               style={{
-                padding: "12px 18px",
-                borderRadius: 14,
-                background: "#eff6ff",
-                color: "#2563eb",
-                textDecoration: "none",
-                fontWeight: 600,
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 12,
               }}
             >
-              Cancelar
-            </Link>
+              <Link
+                href="/prontuarios"
+                style={{
+                  padding: "12px 18px",
+                  borderRadius: 14,
+                  background: "#eff6ff",
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                }}
+              >
+                Cancelar
+              </Link>
 
-            <button
-              type="submit"
-              disabled={loading || carregando}
-              style={{
-                background: loading ? "#93c5fd" : "#2563eb",
-                color: "white",
-                border: "none",
-                borderRadius: 14,
-                padding: "12px 18px",
-                fontWeight: 600,
-                cursor: loading ? "not-allowed" : "pointer",
-              }}
-            >
-              {loading ? "Cadastrando..." : "Cadastrar Prontuário"}
-            </button>
-          </div>
-        </form>
-      </main>
-    </div>
+              <button
+                type="submit"
+                disabled={loading || carregando}
+                style={{
+                  background: loading ? "#93c5fd" : "#2563eb",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 14,
+                  padding: "12px 18px",
+                  fontWeight: 600,
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+              >
+                {loading ? "Cadastrando..." : "Cadastrar Prontuário"}
+              </button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </ProtectedArea>
   );
 }

@@ -7,6 +7,7 @@ import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import styles from "../dashboard/dashboard.module.css";
 import { API_URL } from "../common";
+import ProtectedArea from "@/components/ProtectedArea";
 
 type Participacao = {
   id: number;
@@ -188,158 +189,160 @@ export default function Pacientes() {
   }, [participantesFiltrados]);
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
+    <ProtectedArea>
+      <div className={styles.container}>
+        <Sidebar />
 
-      <main className={styles.main}>
-        {/* HEADER */}
-        <div className={styles.header}>
-          <h1>Pacientes</h1>
-          <p>
-            Participantes das ações extensionistas em andamento e histórico de
-            ações anteriores.
-          </p>
-        </div>
-
-        {/* TOP ACTIONS */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: 20,
-            marginBottom: 20,
-            gap: 16,
-            flexWrap: "wrap",
-          }}
-        >
-        {/* SEARCH */}
-        <div
-          style={{
-            background: "white",
-            padding: "12px 18px",
-            borderRadius: 14,
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            width: 320,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-          }}
-        >
-          <Search size={18} color="#64748b" />
-
-          <input
-            type="text"
-            value={busca}
-            onChange={(event) => setBusca(event.target.value)}
-            placeholder="Nome, CPF ou e-mail"
-            aria-label="Buscar paciente"
-            style={{
-              border: "none",
-              outline: "none",
-              width: "100%",
-              fontSize: 14,
-            }}
-          />
-        </div>
-
-        {/* BUTTON */}
-        <Link
-          href="/pacientes/novo"
-          style={{
-            background: "#2563eb",
-            color: "white",
-            borderRadius: 14,
-            padding: "12px 18px",
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            fontWeight: 600,
-            textDecoration: "none",
-          }}
-        >
-          <Plus size={18} />
-          Novo Paciente
-        </Link>
-
-        </div>
-
-        {loading && (
-          <div className={styles.box}>
-            <p style={mutedText}>Carregando participantes...</p>
-          </div>
-        )}
-
-        {erro && (
-          <div
-            className={styles.box}
-            style={{ marginBottom: 20, border: "1px solid #fecaca" }}
-          >
-            <strong style={{ color: "#dc2626" }}>
-              Erro ao carregar participantes
-            </strong>
-            <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
-              {erro}
+        <main className={styles.main}>
+          {/* HEADER */}
+          <div className={styles.header}>
+            <h1>Pacientes</h1>
+            <p>
+              Participantes das ações extensionistas em andamento e histórico de
+              ações anteriores.
             </p>
           </div>
-        )}
 
-        {!loading && (
-          <>
-            <Secao
-              titulo="Participantes em ações em andamento"
-              descricao="Participantes atualmente vinculados a ações em andamento."
-              total={participantesAtuais.length}
-              vazio="Nenhum participante encontrado em ações em andamento."
-            >
-              {participantesAtuais.map((participante) => (
-                <CartaoParticipante
-                  key={participante.id}
-                  participante={participante}
-                  badge="Participante atual"
-                  tituloLista="Ações em andamento"
-                  detalhado={false}
-                />
-              ))}
-            </Secao>
+          {/* TOP ACTIONS */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 20,
+              marginBottom: 20,
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+          {/* SEARCH */}
+          <div
+            style={{
+              background: "white",
+              padding: "12px 18px",
+              borderRadius: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              width: 320,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+            }}
+          >
+            <Search size={18} color="#64748b" />
 
-            <Secao
-              titulo="Pacientes sem ações"
-              descricao="Pacientes cadastrados que ainda não participaram de nenhuma ação."
-              total={participantesSemAcoes.length}
-              vazio="Nenhum paciente sem ações encontrado."
-            >
-              {participantesSemAcoes.map((participante) => (
-                <CartaoParticipante
-                  key={participante.id}
-                  participante={participante}
-                  badge="Sem ações"
-                  tituloLista=""
-                  detalhado={false}
-                />
-              ))}
-            </Secao>
+            <input
+              type="text"
+              value={busca}
+              onChange={(event) => setBusca(event.target.value)}
+              placeholder="Nome, CPF ou e-mail"
+              aria-label="Buscar paciente"
+              style={{
+                border: "none",
+                outline: "none",
+                width: "100%",
+                fontSize: 14,
+              }}
+            />
+          </div>
 
-            <Secao
-              titulo="Participantes de ações anteriores"
-              descricao="Histórico de participantes de ações já concluídas."
-              total={participantesHistoricos.length}
-              vazio="Nenhum participante encontrado no histórico de ações anteriores."
+          {/* BUTTON */}
+          <Link
+            href="/pacientes/novo"
+            style={{
+              background: "#2563eb",
+              color: "white",
+              borderRadius: 14,
+              padding: "12px 18px",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            <Plus size={18} />
+            Novo Paciente
+          </Link>
+
+          </div>
+
+          {loading && (
+            <div className={styles.box}>
+              <p style={mutedText}>Carregando participantes...</p>
+            </div>
+          )}
+
+          {erro && (
+            <div
+              className={styles.box}
+              style={{ marginBottom: 20, border: "1px solid #fecaca" }}
             >
-              {participantesHistoricos.map((participante) => (
-                <CartaoParticipante
-                  key={participante.id}
-                  participante={participante}
-                  badge="Histórico"
-                  tituloLista="Histórico de ações"
-                  detalhado
-                />
-              ))}
-            </Secao>
-          </>
-        )}
-      </main>
-    </div>
+              <strong style={{ color: "#dc2626" }}>
+                Erro ao carregar participantes
+              </strong>
+              <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>
+                {erro}
+              </p>
+            </div>
+          )}
+
+          {!loading && (
+            <>
+              <Secao
+                titulo="Participantes em ações em andamento"
+                descricao="Participantes atualmente vinculados a ações em andamento."
+                total={participantesAtuais.length}
+                vazio="Nenhum participante encontrado em ações em andamento."
+              >
+                {participantesAtuais.map((participante) => (
+                  <CartaoParticipante
+                    key={participante.id}
+                    participante={participante}
+                    badge="Participante atual"
+                    tituloLista="Ações em andamento"
+                    detalhado={false}
+                  />
+                ))}
+              </Secao>
+
+              <Secao
+                titulo="Pacientes sem ações"
+                descricao="Pacientes cadastrados que ainda não participaram de nenhuma ação."
+                total={participantesSemAcoes.length}
+                vazio="Nenhum paciente sem ações encontrado."
+              >
+                {participantesSemAcoes.map((participante) => (
+                  <CartaoParticipante
+                    key={participante.id}
+                    participante={participante}
+                    badge="Sem ações"
+                    tituloLista=""
+                    detalhado={false}
+                  />
+                ))}
+              </Secao>
+
+              <Secao
+                titulo="Participantes de ações anteriores"
+                descricao="Histórico de participantes de ações já concluídas."
+                total={participantesHistoricos.length}
+                vazio="Nenhum participante encontrado no histórico de ações anteriores."
+              >
+                {participantesHistoricos.map((participante) => (
+                  <CartaoParticipante
+                    key={participante.id}
+                    participante={participante}
+                    badge="Histórico"
+                    tituloLista="Histórico de ações"
+                    detalhado
+                  />
+                ))}
+              </Secao>
+            </>
+          )}
+        </main>
+      </div>
+    </ProtectedArea>
   );
 }
 
