@@ -5,8 +5,17 @@ import Link from "next/link";
 import { API_URL } from "../common";
 import ProtectedArea from "@/components/ProtectedArea";
 
+type Acao = {
+  id: number;
+  titulo: string;
+  descricao: string;
+  modalidade: string;
+  status: string;
+  cargaHoraria: number;
+};
+
 export default function AcoesPage() {
-  const [acoes, setAcoes] = useState<unknown[]>([]);
+  const [acoes, setAcoes] = useState<Acao[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 

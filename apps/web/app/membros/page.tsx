@@ -124,7 +124,7 @@ export default function MembrosPage() {
     [acoes]
   );
 
-  async function carregarDados(x: { ignore: boolean }) {
+  async function carregarDados(x = { ignore: false }) {
     if (x.ignore) return;
 
     try {

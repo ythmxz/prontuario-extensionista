@@ -135,9 +135,10 @@ export default function NovaAcaoPage() {
         if (
           resposta &&
           typeof resposta === "object" &&
-          resposta.message
+          "message" in resposta &&
+          typeof (resposta as { message: unknown }).message === "string"
         ) {
-          mensagem = resposta.message;
+          mensagem = (resposta as { message: string }).message;
         }
 
         throw new Error(mensagem);

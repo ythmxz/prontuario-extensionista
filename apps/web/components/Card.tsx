@@ -1,4 +1,14 @@
-export default function Card({ title, value, color }: Record<string, unknown>) {
+import type { ReactNode } from "react";
+
+export default function Card({
+  title,
+  value,
+  color,
+}: {
+  title: ReactNode;
+  value: ReactNode;
+  color?: string;
+}) {
   return (
     <div style={{
       background: "white",
