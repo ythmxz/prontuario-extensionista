@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import Link from "next/link";
-import styles from "../app/dashboard/dashboard.module.css";
 import {
   Home,
   FileText,
@@ -11,15 +10,13 @@ import {
   User,
   Settings,
 } from "lucide-react";
-import { API_URL } from "../app/common";
 
-function getWithAuth(url: string): Promise<Response> {
-  const token = localStorage.getItem("token");
-  // TODO: verificar se tem o token mesmo
-  const headers = { Authorization: `Bearer ${token}` };
-  return fetch(url, { headers });
-}
+import styles from "@/app/dashboard/dashboard.module.css"; // TODO: não devia ser da dashboard. Mover para outro lugar...
+import { API_URL, getWithAuth } from "@/app/common";
 
+/**
+ * Barra de navegação
+ */
 export default function Sidebar() {
   const [userName, setUserName] = useState<string>("");
 
@@ -43,58 +40,42 @@ export default function Sidebar() {
     loadData();
   }, []);
 
+  type Item = {
+    title: string,
+    icon: ReactNode,
+    href: string,
+  };
+
+  // TODO: usar "className={styles.active}" na rota atual
+
+  const items: Item[] = [
+    { title: "Início 🚧", icon: (<Home size={18}/>), href: "/dashboard" },
+    { title: "Prontuários 🚧", icon: (<FileText size={18}/>), href: "/prontuarios" },
+    { title: "Relatórios 🚧", icon: (<BarChart2 size={18}/>), href: "/relatorios" },
+    { title: "Agenda 🚧", icon: (<Calendar size={18}/>), href: "/agenda" },
+    { title: "Pacientes 🚧", icon: (<User size={18}/>), href: "/pacientes" },
+    { title: "Configurações 🚧", icon: (<Settings size={18}/>), href: "/configuracoes" },
+
+    // rotas experimentais / de teste
+    { title: "HomeFidelis ❗", icon: (<Home size={18}/>), href: "/home" },
+  ];
+
   return (
     <aside className={styles.sidebar}>
-
       <div>
         <div className={styles.logo}>
-          <span>🧡</span>
-          <span>NJBV Saúde</span>
+          <span>Prontuário NJBV</span>
         </div>
 
         <ul className={styles.menu}>
-
-          <li className={styles.active}>
-            <Link href="/dashboard">
-              <Home size={18} />
-              Início
+          {items.map(i => (
+            <Link href={i.href} key={i.title}>
+              <li>
+                  {i.icon}
+                  {i.title}
+              </li>
             </Link>
-          </li>
-
-          <li>
-            <Link href="/prontuarios">
-              <FileText size={18} />
-              Prontuários
-            </Link>
-          </li>
-
-          <li>
-            <Link href="/relatorios">
-              <BarChart2 size={18} />
-              Relatórios
-            </Link>
-          </li>
-
-          <li>
-            <Link href="/agenda">
-              <Calendar size={18} />
-              Agenda
-            </Link>
-          </li>
-
-          <li>
-            <Link href="/pacientes">
-              <User size={18} />
-              Pacientes
-            </Link>
-          </li>
-
-          <li>
-            <Link href="/configuracoes">
-              <Settings size={18} />
-              Configurações
-            </Link>
-          </li>
+          ))}
 
         </ul>
       </div>

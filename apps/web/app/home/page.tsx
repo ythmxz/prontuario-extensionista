@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 const paginas = [
-  { nome: "Dashboard", rota: "/dashboard" },
   { nome: "Login", rota: "/login" },
   { nome: "Cadastro", rota: "/cadastro" },
   { nome: "Pacientes", rota: "/pacientes" },
@@ -44,7 +43,7 @@ export default function HomeFidelis() {
           color: "#666",
         }}
       >
-        Acesso às páginas do sistema.
+        Acesso às páginas do sistema (TODO: tirar essa página quando terminar de arrumar todas)
       </p>
 
       <div

@@ -4,15 +4,25 @@
   background: #f8fafc;
 }
 
+.main-area {
+  left: 200pt;
+}
+
 /* SIDEBAR */
 .sidebar {
-  width: 270px;
+  width: 200pt;
   background: linear-gradient(180deg, #07073b, #09094a);
   color: white;
   padding: 28px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  top: 0;
+  left: 0;
+  position: fixed;
+  overflow-x: hidden;
+  height: 100%;
 }
 
 .logo {
@@ -23,7 +33,7 @@
 }
 
 .menu {
-  margin-top: 30px;
+  margin-top: 27.5pt;
   list-style: none;
 }
 
@@ -68,6 +78,7 @@
 .main {
   flex: 1;
   padding: 30px;
+  margin-left: 200pt;
 }
 
 /* HEADER */

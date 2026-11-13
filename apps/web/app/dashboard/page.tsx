@@ -35,8 +35,7 @@ export default function Dashboard() {
   return (
     <ProtectedArea>
       <div className={styles.container}>
-        <Sidebar />
-
+        <Sidebar/>
         <main className={styles.main}>
 
           <div className={styles.header}>

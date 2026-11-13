@@ -7,3 +7,10 @@ export function isLoggedIn(): boolean {
   // TODO: verificar se o login é inválido
   return true;
 }
+
+export function getWithAuth(url: string): Promise<Response> {
+  const token = localStorage.getItem("token");
+  // TODO: verificar se tem o token mesmo
+  const headers = { Authorization: `Bearer ${token}` };
+  return fetch(url, { headers });
+}
