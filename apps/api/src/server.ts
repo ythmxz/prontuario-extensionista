@@ -36,6 +36,8 @@ import { associacoesAcaoRoutes } from "./routes/associacoesAcao.ts";
 
 import { atendimentosRoutes } from "./routes/atendimento.ts";
 
+import { prontuariosRoutes } from "./routes/prontuarios.ts";
+
 const app = Fastify({
   logger: false,
 });
@@ -77,6 +79,8 @@ app.register(documentosAcaoRoutes);
 app.register(associacoesAcaoRoutes);
 
 app.register(atendimentosRoutes);
+
+app.register(prontuariosRoutes);
 
 app.get("/health", async () => {
   return {
