@@ -318,17 +318,12 @@ function TableRow({ month, consultas, pacientes, impacto }: TableRowProps) {
         borderTop: "1px solid #e2e8f0",
       }}
     >
-
       <td style={{ padding: "18px 0" }}>
         {month}
       </td>
-
       <td>{consultas}</td>
-
       <td>{pacientes}</td>
-
       <td>{impacto}</td>
-
     </tr>
   );
 }

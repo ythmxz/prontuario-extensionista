@@ -19,14 +19,9 @@ type Acao = {
 };
 
 export default function DocumentosPage() {
-  const [documentos, setDocumentos] =
-    useState<Documento[]>([]);
-
+  const [documentos, setDocumentos] = useState<Documento[]>([]);
   const [acoes, setAcoes] = useState<Acao[]>([]);
-
-  const [carregando, setCarregando] =
-    useState(true);
-
+  const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
   useEffect(() => {
